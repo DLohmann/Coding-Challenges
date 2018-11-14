@@ -18,16 +18,16 @@ public:
 
 unordered_set < pair<int, int> > exploredNodes;
 
-int convertToID (i, j) {
+int convertToID (vector<vector<char> >& grid, int i, int j) {
     int N = (int)(grid[0].size());	
     return (i * N) + j;
 }
 
-bool has (i, j) {
+bool has (int i, int j) {
     return exploredNodes.find(make_pair(i, j)) != exploredNodes.end();
 }
 
-void insert (i, j) {
+void insert (int i, int j) {
     exploredNodes.insert(make_pair(i, j));
 }
 
@@ -107,7 +107,7 @@ int numIslands( vector<vector<char> >& grid) {
             }
             
             // skip over explored nodes
-            if (exploredNodes.find(make_pair(i, j)) != exploredNodes.end()) {
+            if (has(i, j)) {
                 continue;
             }
             
