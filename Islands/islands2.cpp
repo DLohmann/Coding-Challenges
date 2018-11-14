@@ -2,7 +2,7 @@
 #include <vector>
 #include <unordered_set>
 #include <utility> // has pair
-#define debug
+//#define debug
 //#define usingEightNeighbors
 
 using namespace std;
@@ -16,26 +16,28 @@ public:
     
 };
 
-unordered_set < pair<int, int> > exploredNodes;
+unordered_set < int > exploredNodes;
 
-int convertToID (vector<vector<char> >& grid, int i, int j) {
-    int N = (int)(grid[0].size());	
+
+int M;		// number of rows 
+int N;		// number of columns
+
+int convertToID (int i, int j) {	
     return (i * N) + j;
 }
 
 bool has (int i, int j) {
-    return exploredNodes.find(make_pair(i, j)) != exploredNodes.end();
+    return exploredNodes.find(convertToID(i, j)) != exploredNodes.end();
 }
 
 void insert (int i, int j) {
-    exploredNodes.insert(make_pair(i, j));
+    exploredNodes.insert(convertToID(i, j));
 }
 
 void Dijkstras(vector<vector<char> >& grid, int i, int j) {
-    int M = (int)(grid.size());		// number of rows
-    int N = (int)(grid[0].size());		// number of columns
+    
     // Check array bounds
-    if (i < 0 || j < 0 || i > M|| j > N) {
+    if (!(0 <= i && i < M && 0 <= j && j < N)) {
         return;
     }
     
@@ -74,13 +76,13 @@ int numIslands( vector<vector<char> >& grid) {
     */
 	int islandCount = 0;
 	
-	int M = (int)(grid.size());		// number of rows 
+	M = (int)(grid.size());		// number of rows 
 	
 	if (M <= 0) {
 		return 0;
 	}
 	
-	int N = (int)(grid[0].size());		// number of columns
+	N = (int)(grid[0].size());		// number of columns
 	
 	if (N <= 0) {
 		return 0;
@@ -131,16 +133,17 @@ int numIslands( vector<vector<char> >& grid) {
 }
 
 int main () {
-	/*
+	
 	vector<vector<char> > grid = {{'1','1','1','1','0'},
 								  {'1','1','0','1','0'},
 								  {'1','1','0','0','0'},
 								  {'0','0','0','0','0'}};
-	*/
+	
+    /*
 	vector<vector<char> > grid = {{'1','1','1'},
 								  {'0','1','0'},
 								  {'1','1','1'}};
-								  
+	*/  
 	cout << numIslands(grid) << endl;
 	
 	return 0;
