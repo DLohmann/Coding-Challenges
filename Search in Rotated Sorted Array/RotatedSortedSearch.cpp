@@ -1,12 +1,15 @@
 #include <iostream>
 #include <vector>
-#include <assert.h>
+
 
 //#define debug_statements
 
 #define test_pivotIndex
 #define test_binarySearch
 
+#if defined test_pivotIndex || defined test_binarySearch
+#include <assert.h>
+#endif
 
 using namespace std;
 //class Solution {
@@ -26,6 +29,7 @@ using namespace std;
     
     */
     
+    // Returns the index in nums of the element searched for
     int binarySearch (vector<int>& nums, int leftIndex, int rightIndex, int target) {
         // Ensure indexes are within array bounds
         if (leftIndex < 0) {
@@ -44,20 +48,20 @@ using namespace std;
             cout << "\tCalled binarySearch (leftIndex = " << leftIndex << ", rightIndex = " << rightIndex << ")" << endl;
         #endif
         
+        
+        
+        int middleIndex = (leftIndex + rightIndex)/2;
+        if (nums[middleIndex] == target) {
+            return middleIndex;
+        }
         if (leftIndex >= rightIndex) {
             return -1;
         }
-        
-        int middleIndex = (leftIndex + rightIndex)/2;
-        
         if (target < nums[middleIndex]) {
             return binarySearch(nums, leftIndex, middleIndex, target);
-        } else if (nums[middleIndex] == target) {
-            return middleIndex;
-        } else {
-            return binarySearch(nums, middleIndex + 1, rightIndex, target);
         }
-        
+        return binarySearch(nums, middleIndex + 1, rightIndex, target);
+
     }
     
     // Returns index of minimum value in array
@@ -100,6 +104,11 @@ using namespace std;
     }
     
     int search(vector<int>& nums, int target) {
+        // Check that the array is not empty
+        if (nums.size() <= 0) {
+            return -1;
+        }
+        
         #ifdef debug_statements
             cout << "Called search!" << endl;
         #endif
@@ -109,7 +118,6 @@ using namespace std;
             cout << "Pivot index is: " << pivotInd << endl;
         #endif
         
-        /*
         // Check if pivot is in the left side of the array:
         if (nums[0] <= target && target <= nums[pivotInd - 1]) {
             return binarySearch (nums, 0, pivotInd - 1, target);
@@ -119,8 +127,11 @@ using namespace std;
         if (nums[pivotInd] <= target && target <= nums[nums.size() - 1]) {
             return binarySearch (nums, pivotInd, nums.size() - 1, target);
         }
-        */
+        
         // If target is not found, return -1
+        
+        
+        
         return -1;
     }
 //};
@@ -145,6 +156,9 @@ void printArr (vector<int>& nums) {
 
 #ifdef test_pivotIndex
     void testPivotIndex () {
+        #ifdef debug_statements
+            cout << "\n\nTESTING PIVOT_INDEX" << endl;
+        #endif
         vector<int> nums_test;
         //           0, 1, 2, 3, 4, 5, 6
         nums_test = {1, 2, 4, 5, 6, 7, 0};
@@ -172,27 +186,63 @@ void printArr (vector<int>& nums) {
 
 #ifdef test_binarySearch
     void testBinarySearch() {
+        #ifdef debug_statements
+            cout << "\n\nTESTING BINARY SEARCH" << endl;
+        #endif
+        
         vector<int> nums_test;
+        
+        // Test with only one element
+        nums_test = {1};
+        assert (binarySearch(nums_test, 0, nums_test.size(), 1) == 0);
+        assert (binarySearch(nums_test, 0, nums_test.size(), 2) == -1);
+        
+        // Test with empty vector
+        nums_test = {};
+        assert (binarySearch(nums_test, 0, nums_test.size(), 2) == -1);
+        
+        // test finding even numbers
         //           0, 1, 2, 3, 4, 5, 6
         nums_test = {0, 2, 4, 6, 8,10,12};
-        
         for (int target = 0; target < nums_test.size(); target++) {
             
-            int foundValue = (target % 2 == 0)? target : -1;
+            // nums_test has only even numbers. So assert that even numbers were found and odd numbers were not
+            if (target % 2 == 0) { // even numbers should be found
+                assert(binarySearch(nums_test, 0, nums_test.size(), target) != -1);
+            } else { // odd numbers should not be found
+                assert(binarySearch(nums_test, 0, nums_test.size(), target) == -1);
+            }
             
-            assert(binarySearch(nums_test, 0, nums_test.size(), target) == foundValue);
+            // cout << "Target is: " << target << endl;
+            // cout << "Array is:\n";
+            // printArr(nums_test);
+            // cout << "Array contains target?: " << search (nums, target) << endl;
+            // cout << "Array contains target?: " << ((binarySearch(nums_test, 0, nums_test.size(), target) != -1)? "True" : "False") << "\n\n" << endl;
+        }
+        
+        // test finding odd numbers
+        //           0, 1, 2, 3, 4, 5, 6
+        nums_test = {1, 3, 5, 7, 9, 11, 13};
+        for (int target = 0; target < nums_test.size(); target++) {
             
-            //cout << "Target is: " << target << endl;
+            // nums_test has only odd numbers. So assert that odd numbers were found and even numbers were not
+            if (target % 2 == 1) { // odd numbers should be found
+                assert(binarySearch(nums_test, 0, nums_test.size(), target) != -1);
+            } else { // even numbers should not be found
+                assert(binarySearch(nums_test, 0, nums_test.size(), target) == -1);
+            }
             
-            //cout << "Array contains target?: " << search (nums, target) << endl;
-            //cout << "Array contains target?: " << ((binarySearch(nums, 0, nums.size(), target) != -1)? "True" : "False") << "\n\n" << endl;
+            // cout << "Target is: " << target << endl;
+            // cout << "Array is:\n";
+            // printArr(nums_test);
+            // cout << "Array contains target?: " << search (nums, target) << endl;
+            // cout << "Array contains target?: " << ((binarySearch(nums_test, 0, nums_test.size(), target) != -1)? "True" : "False") << "\n\n" << endl;
         }
         
     }
 #endif
 
 int main () {
-    
     #ifdef test_pivotIndex
         testPivotIndex();
     #endif
