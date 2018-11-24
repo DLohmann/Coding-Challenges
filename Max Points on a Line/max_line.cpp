@@ -43,6 +43,23 @@ unordered_map < int, int > lineCounts;	// can make this an unordered_map (a hash
 	// return (i * N) + j;
 // }
 
+bool lineCountsHasPoint (int a, int b) {
+	
+}
+
+
+void incrementLineCount (line& lineVals) {
+	// Increase the count of this point by 1
+	if (lineCounts.find(lineVals.hash()) == lineCounts.end()) { // If the key is not found, set its count to 1
+		lineCounts[lineVals.hash()] = 1;
+	} else { // If the key is found, increment its count by 1
+		++lineCounts[lineVals.hash()];
+	}
+}
+
+
+
+
 /*
 Basic Algorithm:
 ) Iterate through every pair of different points.
@@ -93,11 +110,8 @@ int maxPoints(vector<Point>& points) {
 			}
 			
 			// Increase the count of this point by 1
-			if (lineCounts.find(lineVals.hash()) == lineCounts.end()) { // If the key is not found, set its count to 1
-				lineCounts[lineVals.hash()] = 1;
-			} else { // If the key is found, increment its count by 1
-				++lineCounts[lineVals.hash()];
-			}
+			incrementLineCount (lineVals);
+			
 			
 			
 		}
