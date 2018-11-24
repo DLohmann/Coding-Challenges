@@ -18,7 +18,8 @@ using namespace std;
  * };
  */
  
-
+int numLines;	// This is the number of points in the input of the maxPoints function. This is used for the hashing function to insert lines in the lineCounts array
+ 
 struct Point {
 	int x;
 	int y;
@@ -33,7 +34,7 @@ struct line {
 	line() : a(0), b(0) {}
 	line(int a, int b) : a(a), b(b) {}
 	int hash () {
-		return (a << 16) | b;
+		return (a * numLines) + b;
 	}
 };
 
@@ -43,14 +44,14 @@ unordered_map < int, int > lineCounts;	// can make this an unordered_map (a hash
 	// return (i * N) + j;
 // }
 
-bool lineCountsHasPoint (int a, int b) {
-	
+bool lineCountsHasLine (line& lineVals) {
+	return lineCounts.find(lineVals.hash()) != lineCounts.end();
 }
 
 
 void incrementLineCount (line& lineVals) {
 	// Increase the count of this point by 1
-	if (lineCounts.find(lineVals.hash()) == lineCounts.end()) { // If the key is not found, set its count to 1
+	if (!lineCountsHasLine(lineVals)) { // If the key is not found, set its count to 1
 		lineCounts[lineVals.hash()] = 1;
 	} else { // If the key is found, increment its count by 1
 		++lineCounts[lineVals.hash()];
@@ -67,7 +68,7 @@ Basic Algorithm:
 ) When 'a' and 'b' are calculated, use the pair of these as a key in a data structure (ie: a hashmap to make lookups faster, or a binary tree to look up the max faster later), which counts the amount of times that this pair has been seen. Add 1 to the count of the pair (a, b)
 ) When finished iterating, find the pair (a, b) with the maximum count, and print it's count
 */
-line calculateLine (Point& p1, Point& p2) {
+line calculateLine (const Point& p1, const Point& p2) {
 	// Returns the 'a' and 'b' values of the line in the form a*x + b*y = 1
 	cout << "\tFindng line from point (" << p1.x << ", " << p1.y << ") to (" << p2.x << ", " << p2.y << ")" << endl;
 	// Ensure that the points are not at the same position
@@ -75,6 +76,8 @@ line calculateLine (Point& p1, Point& p2) {
 		cout << "The points are the same!" << endl;
 		return line(INT_MIN, INT_MIN);	// Use the coordinate (INT_MIN, INT_MIN) to designate that the indexes are the same
 	}
+	
+	// Ensure that the points are ordered, so that calculateLine(Point(x1, y1), Point(x2, y2)) is not the same as calculateLine(Point(x2, y2), Point(x1, y1))???????????????????????? Or maybe this doesn't need to be done, since there is only 1 unique way to represent a line in the form (ax + by = 1)?????
 	
 	// Ensure that the points are not on the line y = x, so that the determinant of the 2 by 2 point matrix is not 0
 	int det = p1.x*p2.y - p2.x*p1.y;
@@ -84,24 +87,35 @@ line calculateLine (Point& p1, Point& p2) {
 	}
 	
 	int a = (p2.y - p1.y)/det;
-	int b = (p1.x = p2.x)/det;
+	int b = (p1.x - p2.x)/det;
 	cout << "\tline is: " << a << "*x   +   " << b << "*y   = 1" << endl;
 	line lineVal (a, b);
 	return lineVal;
 }
 
-int maxPoints(vector<Point>& points) {
+void printPoints (const vector<Point>& points) {
+	
+	cout << "points are: (" << points[0].x << " ," << points[0].y << ")";
+	for (int i = 1; i < points.size(); i++) {
+		cout << ", (" << points[i].x << " ," << points[i].y << ")";
+	}
+	cout << endl;
+}
+
+int maxPoints(const vector<Point>& points) {
 	cout << "\n\nFINDING MAX LINE" << endl;
 	lineCounts.clear();
 	if (points.size() == 0) {
 		return 0;
 	}
-	
+	numLines = points.size() * (points.size() - 1) / 2;	// The number of lines between n points is equal to n choose 2, or C(n, 2). This variable must be set to call line.hash(), in order to add lines into the lineCounts data structure.
 	// Iterate through all pairs of points that are not the same, at indexes i and j. This means that i < j
 	for (int i = 0; i < points.size() - 1; i++) {
 		for (int j = i + 1; j < points.size(); j++) {
 			cout << "\ti = " << i << ", j = " << j << endl;
-			cout << "\tFindng line from point (" << points[i].x << ", " << points[i].y << ") to (" << points[j].x << ", " << points[j].y << ")" << endl;
+			//cout << "\tFindng line from point (" << points[i].x << ", " << points[i].y << ") to (" << points[j].x << ", " << points[j].y << ")" << endl;
+			cout << "\t";
+			printPoints(points);
 			line lineVals = calculateLine (points[i], points[j]);
 			
 			// Check if the points were the same. If so, skip over them
@@ -127,15 +141,6 @@ int maxPoints(vector<Point>& points) {
 	}
 	cout << "max count is: " << max << endl;
 	return max;
-}
-
-void printPoints (vector<Point>& points) {
-	
-	cout << "points are: (" << points[0].x << " ," << points[0].y << ")";
-	for (int i = 1; i < points.size(); i++) {
-		cout << ", (" << points[i].x << " ," << points[i].y << ")";
-	}
-	cout << endl;
 }
 
 int main () {
