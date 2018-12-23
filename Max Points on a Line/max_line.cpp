@@ -20,6 +20,7 @@ using namespace std;
  
 int numLines;	// This is the number of points in the input of the maxPoints function. This is used for the hashing function to insert lines in the lineCounts array
  
+ 
 struct Point {
 	int x;
 	int y;
@@ -82,12 +83,21 @@ line calculateLine (const Point& p1, const Point& p2) {
 	// Ensure that the points are not on the line y = x, so that the determinant of the 2 by 2 point matrix is not 0
 	int det = p1.x*p2.y - p2.x*p1.y;
 	cout << "\tdet = " << det << endl;
-	if (det == 0) {
-		return line (0, 0);	// Use the coordinate (0, 0) to designate that each points x and y coordinates are the same. So the line is y=x
+	
+	// The 'a' and 'b' values that uniquely identify a line, in the form ax + by = 1
+	int a;
+	int b;
+	
+	if (det == 0) { // If determinant = 0, then this means that x1/x2 = y1/y2, so the line through points (x1, y1), (x2, y2) is y = x
+		a = 0;
+		b = 0;
+		//return line (0, 0);	// Use the coordinate (0, 0) to designate that each points x and y coordinates are the same (). So the line is y=x
+	} else {
+		a = (p2.y - p1.y)/det;	// TODO: Fix bug here when |(p2.y - p1.y)| < |det|, or |(p1.x - p2.x)| < |det| making it round down to 0.
+		b = (p1.x - p2.x)/det;
 	}
 	
-	int a = (p2.y - p1.y)/det;
-	int b = (p1.x - p2.x)/det;
+	
 	cout << "\tline is: " << a << "*x   +   " << b << "*y   = 1" << endl;
 	line lineVal (a, b);
 	return lineVal;
@@ -112,10 +122,10 @@ int maxPoints(const vector<Point>& points) {
 	// Iterate through all pairs of points that are not the same, at indexes i and j. This means that i < j
 	for (int i = 0; i < points.size() - 1; i++) {
 		for (int j = i + 1; j < points.size(); j++) {
-			cout << "\ti = " << i << ", j = " << j << endl;
+			cout << "\n\ti = " << i << ", j = " << j << endl;
 			//cout << "\tFindng line from point (" << points[i].x << ", " << points[i].y << ") to (" << points[j].x << ", " << points[j].y << ")" << endl;
-			cout << "\t";
-			printPoints(points);
+			//cout << "\t";
+			//printPoints(points);
 			line lineVals = calculateLine (points[i], points[j]);
 			
 			// Check if the points were the same. If so, skip over them
