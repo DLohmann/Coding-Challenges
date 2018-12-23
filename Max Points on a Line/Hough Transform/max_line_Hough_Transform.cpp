@@ -46,7 +46,7 @@ Basic Algorithm:
 void printPoints (const vector<Point>& points) {
 	
 	cout << "points are: (" << points[0].x << " ," << points[0].y << ")";
-	for (int i = 1; i < points.size(); i++) {
+	for (int i = 1; i < (int)points.size(); i++) {
 		cout << ", (" << points[i].x << " ," << points[i].y << ")";
 	}
 	cout << endl;
@@ -60,7 +60,7 @@ int maxPoints(const vector<Point>& points) {
 	#endif
 	
 	// Ensure points vector is not empty
-	if (points.size() == 0) {
+	if ((int)points.size() == 0) {
 		return 0;
 	}
 	
@@ -112,7 +112,7 @@ int maxPoints(const vector<Point>& points) {
 	
 	// Find the maximum entry in the accumulator
 	int max = 0;
-	for (int m = 0; m < accumulator.size(); m++) {
+	for (int m = 0; m < (int)accumulator.size(); m++) {
 		for (int n = 0; n < accumulator[0].size(); n++) {
 			if (accumulator[m][n] > max) {
 				max = accumulator[m][n];

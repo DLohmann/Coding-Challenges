@@ -10,7 +10,7 @@ PROGRAM = max_points
 # OPTFLAGS = -g  # for debug
 OPTFLAGS = -g
 CC       = g++
-CFLAGS   = -w -std=c++11 $(OPTFLAGS)
+CFLAGS   = -w -std=c++14 $(OPTFLAGS)
 
 # Glut and OpenGL library flags
 #ifeq ($(strip $(OS)),Darwin)
