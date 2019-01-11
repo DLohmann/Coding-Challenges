@@ -13,7 +13,7 @@
 
 // Description:
 // Tests if a sudoku puzzle is valid.
-// Based on this LeetCode challenge: https://leetcode.com/problems/sudoku-solver/
+// Based on this LeetCode challenge: https://leetcode.com/problems/valid-sudoku/
 
 
 using namespace std;
