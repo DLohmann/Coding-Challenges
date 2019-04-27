@@ -1,1 +1,7 @@
+# Stuff to ignore in repository
+
+# Visual studio code settings
+.vscode/*
+
+# Executables
 *.exe

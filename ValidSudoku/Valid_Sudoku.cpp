@@ -59,7 +59,7 @@ bool isValidSudoku(vector< vector< char > >& board) {
 
 	// Check rows:
 	for (int row = 0; row < board[0].size(); row++) {
-		counter =  vector<int>(10, 0);	// Initialize to all 0's
+		counter =  vector<int>(9, 0);	// Initialize to all 0's
 		for (int column = 0; column < board.size(); column++) {
 			// Convert the character to an integer, and increment the counter
 			counter[ (int)(board[row][column] - '1') ] += 1;
@@ -76,7 +76,7 @@ bool isValidSudoku(vector< vector< char > >& board) {
 
 	// Check columns:
 	for (int column = 0; column < board.size(); column++) {
-		counter =  vector<int>(10, 0);	// Initialize to all 0's
+		counter =  vector<int>(9, 0);	// Initialize to all 0's
 		for (int row = 0; row < board[0].size(); row++) {
 			// Convert the character to an integer, and increment the counter
 			counter[ (int)(board[row][column] - '1') ] += 1;
@@ -94,7 +94,7 @@ bool isValidSudoku(vector< vector< char > >& board) {
 	//cout << endl;
 	for (int regionRow = 0; regionRow < 3; regionRow++) {
 		for (int regionColumn = 0; regionColumn < 3; regionColumn++) {
-			counter =  vector<int>(10, 0);	// Initialize to all 0's
+			counter =  vector<int>(9, 0);	// Initialize to all 0's
 			//cout << "\tChecking region (" << regionRow << ", " << regionColumn << ")" << endl;
 			for (int index = 0; index < 9; index++) {	// "index" is the position of the cell relative to the region
 				int row = 		(3*regionRow)    + (index/3);
