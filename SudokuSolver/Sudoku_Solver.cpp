@@ -198,9 +198,10 @@ void SudokuSolver(vector< vector< char > >& board) {
 
 	// This loop is the heart of the algorithm:
 	bool competingCandidatesFound;	// Stores whether there is at least 1 list in matrix with multiple candidates in the list there
+	int numIterations = 0;
 	do {
 		competingCandidatesFound = false;	// Initially, no competing candidates have been found
-		
+		cout << "Beginning iteration " << numIterations << endl;
 		//Iterate through each entry in the matrix. For each entry, iterate through the numbers 1-9 (all possible entries).
 		for (int i = 0; i < matrix.size(); i++) {
 			for (int j = 0; j < matrix[0].size(); j++) {
@@ -224,7 +225,7 @@ void SudokuSolver(vector< vector< char > >& board) {
 				
 				// Check if any candidate number is the only candidate of that digit that can go in that row, column, or region
 				// This is called, horizontal scanning, vertical scanning, or region scanning
-				/*
+				cout << "\tBeggining horizontal scanning at (" << i << ", " << j << ")\n";
 				for (list<char>::iterator it = matrix[i][j].begin(); it != matrix[i][j].end(); it++) {
 					// Check if the char is the only instance of that char in the row, column, or region
 					// If the char is unique to the row, column, or region, then clear all values in the candidates for this entry, except the candidate that is unique
@@ -236,14 +237,14 @@ void SudokuSolver(vector< vector< char > >& board) {
 						matrix[i][j].push_back(val);
 						break;	// Exit the loop, since a unique value that must go in this entry is found
 					}// else if (countInRow() <= 1) {
-					//	printf("Error, countInRow")
+					//	cout << "Error, countInRow\n";
 					//}
 					
 					// Check column
 					
 					// Check region
 				}
-				*/
+				cout << "\tHorizontal scanning ended\n";
 				// If there is only one candidate that can go there, then place it there
 				if (matrix[i][j].size() == 1) {
 					// Remove all candidates from the matrix with the same value in that row and column and region
@@ -260,8 +261,13 @@ void SudokuSolver(vector< vector< char > >& board) {
 			
 		}
 		
+		printMatrix(board);
+		
+		numIterations++;
+		cout << "Iteration " << numIterations << " complete\n";
+		
 		// If there are entries in matrix that have multiple candidates, then this will loop again
-	} while (competingCandidatesFound);
+	} while (competingCandidatesFound && numIterations <= 3);
 
 	
 
