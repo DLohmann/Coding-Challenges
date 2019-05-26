@@ -46,6 +46,37 @@ public:
     }
 };
 
+/*
+Probability that a guess is not on blacklist:
+P = (N - B)/N = 1 - (B/N)
+
+
+
+Case 2:		If P is close to 0, then we can create a whitelist, and pick from it.
+Case 1&3:	If P is close to 1, we can just guess.
+
+
+Cases:
+	1) Empty blacklist.
+		Guess a random number
+		
+		Constructor:	O(1) runtime, O(1) memory
+		Pick:			O(1) runtime, O(1) memory
+	2) N < 100000.
+		Create a whitelist, and choose from it.
+	
+		Constructor:	O(N + (B*log(B)) ) runtime, O(N-B) memory
+		Pick:			O(1) runtime, O(N-B) memory
+	3) N >= 100000
+		Keep guessing a random number, and stop if it is not in blacklist.
+		
+
+*/
+
+// Some sample solutions:
+// https://stackoverflow.com/questions/6443176/how-can-i-generate-a-random-number-within-a-range-but-exclude-some
+// https://codereview.stackexchange.com/questions/213397/uniformly-generate-a-number-from-0-to-n-1-that-isnt-on-a-blacklist
+
 /**
  * Your Solution object will be instantiated and called as such:
  * Solution* obj = new Solution(N, blacklist);
