@@ -77,7 +77,12 @@ public:
 				if ((it->second)->child.empty()) {
 					explored.emplace(it->second);
 					if ((it->second)->endOfWord) {
-						wordsFound.push_back(makeWord(nodesAbove));
+						list<node*> wordLetters(nodesAbove);
+						wordLetters.pop_front();
+						wordLetters.pop_front();
+						wordLetters.push_back(currentNode);
+						wordLetters.push_back(it->second);
+						wordsFound.push_back(makeWord(wordLetters));
 						cout << "\tfound word \"" << wordsFound.back() << "\"" << endl;
 					}
 				} else {
