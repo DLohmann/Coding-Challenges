@@ -1,3 +1,8 @@
+/* TODO:
+1) Change the algorithm to use the algorithm at this link (https://leetcode.com/problems/3sum/discuss/317216/Optimized-java-solution), but keep using binary search lookup to tell if a triplet has already been found.
+
+*/
+
 class Solution {
 public:
     static bool triplet_compare(vector<int> a, vector<int> b) {
@@ -38,14 +43,17 @@ public:
         }
         nums.assign( s.begin(), s.end() );
         */
+        
+        // Print nums
         cout << "nums is: " << nums[0];
         for (int i = 1; i < nums.size(); i++) {
             cout << ", " << nums[i];
         }
         cout << endl;
         
+        
         list< vector<int> > triplets;
-        int i, j, k;
+        int i, j, k;    // Ensure i < j < k
         for(int i = 0  ; i < nums.size() - 2; i++) {
         for(int j = i+1; j < nums.size() - 1; j++) {
         //for(int k = j+1; k < nums.size()    ; k++) {
@@ -90,5 +98,5 @@ public:
 /*
 Helpful links:
 https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector
-
+https://leetcode.com/problems/3sum/discuss/317216/Optimized-java-solution
 */
