@@ -1,7 +1,12 @@
 # Stuff to ignore in repository
 
 # Visual studio code settings
-.vscode/*
+.vscode
+settings.json
+*/settings.json
+*/*/settings.json
+*/.vscode/settings.json
+#.vscode/*
 
 # Executables
 *.exe
