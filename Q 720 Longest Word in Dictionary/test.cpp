@@ -8,7 +8,7 @@ int main () {
 	
 	Solution * sol;
 	sol = new Solution();
-	vector<string> words1 {"a","ab","abc","bc", "world"};
+	vector<string> words1 {"a","ab", "aba","abc","bc", "world"};
 	sol->insertWords(words1);
 	list<string> l = sol->findAllWords();
 	for (string word : l) {

@@ -126,7 +126,7 @@ public:
 
 	~Solution() {
 		//TODO(dlohmann): Use depth first search post order traversal to delete all nodes
-		
+		cout << "Beginning deletion" << endl;
 		list<node *> nodesAbove;
 		set<node*> explored;
 		nodesAbove.push_back(&root);
@@ -144,8 +144,15 @@ public:
 				if ((it->second)->child.empty()) {
 					//explored.emplace(it->second);
 					(currentNode->child).erase(it->second->letter);
+					if ((it->second)->endOfWord) {
+						list<node*> wordLetters(nodesAbove);
+						wordLetters.pop_front();
+						wordLetters.pop_front();
+						wordLetters.push_back(currentNode);
+						wordLetters.push_back(it->second);
+						cout << "\tdeleted \"" << makeWord(wordLetters) << "\"" << endl;
+					}
 					delete it->second;
-					cout << "erased " << makeWord(nodesAbove) << endl;
 				} else {
 					//else add currentNode to nodesAbove and visit it's children by setting currentNode to a child
 					nodesAbove.push_back(currentNode);
@@ -159,7 +166,7 @@ public:
 			//move back up one level, and pop off nodesAbove's back
 			nodesAbove.pop_back();
 			currentNode = nodesAbove.back();
-			
+			cout << "ended deletion" << endl;
 		}
 		// Visit every child node
 		

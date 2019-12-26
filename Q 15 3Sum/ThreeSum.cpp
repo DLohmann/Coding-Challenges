@@ -1,6 +1,15 @@
+#include<vector>
+#include<list>
+#include<algorithm>
+#include<iostream>
+/* TODO:
+1) Change the algorithm to use the algorithm at this link (https://leetcode.com/problems/3sum/discuss/317216/Optimized-java-solution), but keep using binary search lookup to tell if a triplet has already been found.
+
+*/
+
 class Solution {
 public:
-    static bool triplet_compare(vector<int> a, vector<int> b) {
+    static bool triplet_compare(std::vector<int> a, std::vector<int> b) {
         // a < b
         if (a[0] < b[0]) {
             return true;
@@ -22,14 +31,14 @@ public:
         
         return false;
     }
-    vector<vector<int>> threeSum(vector<int>& nums) {
+    std::vector<std::vector<int>> threeSum(std::vector<int>& nums) {
         if (nums.size() < 3) {
-            return  vector<vector<int>> {};
+            return std::vector<std::vector<int>> {};
         }
         
         sort(nums.begin(), nums.end());
         
-        // Sort the nums vector, and remove duplicates (so that none of the solution sets have duplicates):
+        // Sort the nums std::vector, and remove duplicates (so that none of the solution sets have duplicates):
         /*
         set<int> s;
         unsigned size = nums.size();
@@ -38,14 +47,17 @@ public:
         }
         nums.assign( s.begin(), s.end() );
         */
-        cout << "nums is: " << nums[0];
-        for (int i = 1; i < nums.size(); i++) {
-            cout << ", " << nums[i];
-        }
-        cout << endl;
         
-        list< vector<int> > triplets;
-        int i, j, k;
+        // Print nums
+        std::cout << "nums is: " << nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            std::cout << ", " << nums[i];
+        }
+        std::cout << std::endl;
+        
+        
+        std::list<std::vector<int> > triplets;
+        int i, j, k;    // Ensure i < j < k
         for(int i = 0  ; i < nums.size() - 2; i++) {
         for(int j = i+1; j < nums.size() - 1; j++) {
         //for(int k = j+1; k < nums.size()    ; k++) {
@@ -58,27 +70,27 @@ public:
             
             
         if (nums[i] + nums[j] + nums[k] == 0 && // Check if it's 0
-           !binary_search(triplets.begin(), triplets.end(), vector<int>{nums[i], nums[j], nums[k]}, triplet_compare ) // Check if it's already in triplets
+           !binary_search(triplets.begin(), triplets.end(), std::vector<int>{nums[i], nums[j], nums[k]}, triplet_compare ) // Check if it's already in triplets
            ) {
 
 
 
-            vector<int> zero_triplet = {nums[i], nums[j], nums[k]};
+            std::vector<int> zero_triplet = {nums[i], nums[j], nums[k]};
             //sort(triplet.begin(), triplet.end());
-            cout << "[" << nums[i] << ", " << nums[j] << ", " << nums[k] << "]" << endl;
-            //cout << "[" << i << ", " << j << ", " << k << "]" << endl;
+            std::cout << "[" << nums[i] << ", " << nums[j] << ", " << nums[k] << "]" << std::endl;
+            //std::cout << "[" << i << ", " << j << ", " << k << "]" << std::endl;
             triplets.push_back(zero_triplet);
             continue;
 
         } else {
-            cout << "\t(" << nums[i] << ", " << nums[j] << ", " << nums[k] << ")" << endl;
-            //cout << "\t(" << i << ", " << j << ", " << k << ")" << endl;
+            std::cout << "\t(" << nums[i] << ", " << nums[j] << ", " << nums[k] << ")" << std::endl;
+            //std::cout << "\t(" << i << ", " << j << ", " << k << ")" << std::endl;
 
         }
         //}
         }
         }
-        vector< vector<int> > sums {triplets.begin(), triplets.end()};
+        std::vector< std::vector<int> > sums {triplets.begin(), triplets.end()};
         
         // Remove duplicates
         
@@ -90,5 +102,5 @@ public:
 /*
 Helpful links:
 https://stackoverflow.com/questions/1041620/whats-the-most-efficient-way-to-erase-duplicates-and-sort-a-vector
-
+https://leetcode.com/problems/3sum/discuss/317216/Optimized-java-solution
 */
