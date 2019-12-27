@@ -1,5 +1,6 @@
 #include<vector>
 #include<list>
+#include<set>
 #include<algorithm>
 #include<iostream>
 /* TODO:
@@ -39,21 +40,14 @@ public:
         sort(nums.begin(), nums.end());
         
         // Sort the nums std::vector, and remove duplicates (so that none of the solution sets have duplicates):
-        /*
-        set<int> s;
+        
+        std::set<int> s;
         unsigned size = nums.size();
-        for( unsigned i = 0; i < size; ++i ) {
-            s.insert( nums[i] );
+        for(int num : nums) {
+            s.insert( num );
         }
         nums.assign( s.begin(), s.end() );
-        */
         
-        // Print nums
-        std::cout << "nums is: " << nums[0];
-        for (int i = 1; i < nums.size(); i++) {
-            std::cout << ", " << nums[i];
-        }
-        std::cout << std::endl;
         
         
         std::list<std::vector<int> > triplets;
