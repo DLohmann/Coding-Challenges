@@ -50,7 +50,25 @@ public:
 		
 		
 		std::list<std::vector<int> > triplets;
-		int i, j, k;	// Ensure i < j < k
+		int i = 0, j, k = nums.size();	// Ensure i < j < k}
+		do {
+			std::vector<int>::iterator it = std::lower_bound(nums.begin() + i + 1, nums.begin() + k, -1*(nums[i] + nums[j]));
+			// If all entries in subarray are less than target, then increment lower bound index i.
+			if (it == nums.begin() + k) {
+				i++;
+				continue;
+			}
+			j = *it;
+			int sum = nums[i] + nums[j] + nums[k];
+			// If all the entries in the subarray are greater than target, then decrement upper bound index k.
+			// If the first few entries are less than target, and last few are greater, than sum > 0. So 
+			if (it == nums.begin() + i + 1 && sum != 0) {
+				k--;
+				continue;
+			}
+			// If target was found, then increment 
+		} while (i < k);
+		/*
 		for(int i = 0  ; i < nums.size() - 2; i++) {
 			for(int j = i+1; j < nums.size() - 1; j++) {
 			//for(int k = j+1; k < nums.size()	; k++) {
@@ -78,6 +96,7 @@ public:
 			//}
 			}
 		}
+        */
 		std::vector< std::vector<int> > sums {triplets.begin(), triplets.end()};
 		
 		// Remove duplicates

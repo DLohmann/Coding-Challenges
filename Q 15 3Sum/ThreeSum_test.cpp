@@ -18,7 +18,7 @@ void PrintMatrix (std::vector<std::vector<int>> input) {
 	std::cout << std::endl;
 }
 void SimpleTest() {
-	std::vector<int> input = {-1, 0, 1, 2, -1, -4};
+	std::vector<int> input = {-1, 0, 1, 2, -1, -4}; // sorted: -4, -1, -1, 0, 1, 2
 	Solution solution = Solution();
 	std::vector<std::vector<int>> actual = solution.threeSum(input);
 	std::vector<std::vector<int>> expected =
