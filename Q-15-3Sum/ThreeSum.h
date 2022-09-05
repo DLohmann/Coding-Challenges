@@ -9,6 +9,7 @@ class Solution {
 public:
 	static bool triplet_compare(std::vector<int> a, std::vector<int> b);
 	std::vector<std::vector<int>> threeSum(std::vector<int>& input);
+	std::vector<std::vector<int>> threeSumOther(std::vector<int>& input);
 };
 
 }  // namespace three_sum
