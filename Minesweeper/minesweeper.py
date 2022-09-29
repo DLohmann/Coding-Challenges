@@ -63,11 +63,10 @@ class Game:
 			i, j = neighbor
 			if 0 <= i and i < self.height and 0 <= j and j < self.width and self.mines[i][j] == 1:
 				count += 1
-		
 		return count
 	
 	def explore(self, x, y):
-		explore_queue = {(x, y)}
+		explore_queue = {(i, j) for i in range(x - 1, x + 2) for j in range(y - 1, y + 2)}
 		while (len(explore_queue) > 0):
 			i, j = explore_queue.pop()
 			if not (0 <= i and i < self.height and 0 <= j and j < self.width):
@@ -79,8 +78,15 @@ class Game:
 			count = self.count_neighboring_mines(i, j)
 			self.explored[i][j] = count
 			if count == 0:
-				explored()
-				explore_queue.update([(i - 1, j), (i, j - 1), (i, j), (i + 1, j), (i, j + 1)])
+				explore_queue.update([
+					(i - 1, j - 1),
+					(i - 1, j),
+					(i - 1, j + 1),
+					(i, j - 1),
+					(i, j + 1),
+					(i + 1, j - 1),
+					(i + 1, j),
+					(i + 1, j + 1)])
 	
 	def check_win(self):
 		return np.array_equal(np.where(self.explored == -1), np.where(self.mines == 1))
@@ -96,7 +102,8 @@ class Game:
 		count = self.count_neighboring_mines(x, y)
 		print(f"{count} neighboring mines")
 		self.explore(x, y)
-		self.check_win()
+		if self.check_win():
+			self.finished = True
 	
 	def visualize(self):
 		# "." for unexplored
@@ -128,6 +135,10 @@ def initialize(height, width, num_mines, initial_click=None):
 		game.click((int(val[0]), int(val[1])))
 		game.visualize()
 	game.printMines()
+	if (game.check_win()):
+		print("You won!")
+	else:
+		print("You lost")
 	
 if __name__ == "__main__":
 	initialize(8, 8, 8)
