@@ -67,11 +67,9 @@ class Game:
 		return count
 	
 	def explore(self, x, y):
-		# Stores x, y coordinates and bool for if it is across a corner.
-		# Keeps to not explore across a corner.
-		explore_queue = {(x, y, False)}
+		explore_queue = {(x, y)}
 		while (len(explore_queue) > 0):
-			i, j, across_corner = explore_queue.pop()
+			i, j = explore_queue.pop()
 			if not (0 <= i and i < self.height and 0 <= j and j < self.width):
 				continue
 			if self.mines[i][j] == 1:
@@ -80,8 +78,9 @@ class Game:
 				continue
 			count = self.count_neighboring_mines(i, j)
 			self.explored[i][j] = count
-			if count == 0 and not across_corner:
-				explore_queue.update([(i - 1, j, False), (i, j - 1, False), (i + 1, j, False), (i, j + 1, False), (i - 1, j - 1, True), (i - 1, j + 1, True), (i + 1, j - 1, True), (i + 1, j + 1, True)])
+			if count == 0:
+				explored()
+				explore_queue.update([(i - 1, j), (i, j - 1), (i, j), (i + 1, j), (i, j + 1)])
 	
 	def check_win(self):
 		return np.array_equal(np.where(self.explored == -1), np.where(self.mines == 1))
