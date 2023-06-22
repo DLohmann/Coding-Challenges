@@ -41,3 +41,13 @@ a.out
 .bazelversion
 # User-specific .bazelrc
 user.bazelrc
+
+# Copied from https://github.com/ourarash/cpp-template/blob/master/.gitignore
+/bazel-Bazel_with_GTest
+/bazel-bin
+/bazel-genfiles
+/bazel-out
+/bazel-testlogs
+/bazel-template
+/bazel-*
+*.md2

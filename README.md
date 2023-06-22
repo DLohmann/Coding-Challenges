@@ -8,3 +8,6 @@ Feel free to fork or add bugs. Progress is ongoing!
 TODO:
 - Use Bazel for building
 - Use googletest for testing
+
+Helpful template:
+https://github.com/ourarash/cpp-template
