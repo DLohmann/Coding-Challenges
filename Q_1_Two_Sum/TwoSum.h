@@ -7,7 +7,7 @@ namespace two_sum {
 
 class Solution {
 public:
-	std::vector<std::vector<int>> twoSum(std::vector<int>& input);
+	std::vector<int> twoSum(std::vector<int>& input, int target);
 };
 
 }  // namespace two_sum

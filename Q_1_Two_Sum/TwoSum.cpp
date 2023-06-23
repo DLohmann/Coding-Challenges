@@ -7,8 +7,8 @@
 #include<iostream>
 
 namespace two_sum {
-
-std::vector<std::vector<int>> Solution::twoSum(std::vector<int>& input) {
+	
+std::vector<int> Solution::twoSum(std::vector<int>& nums, int target) {
 	return {};
 }
 
