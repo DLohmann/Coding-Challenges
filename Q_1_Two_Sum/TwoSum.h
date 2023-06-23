@@ -7,7 +7,14 @@ namespace two_sum {
 
 class Solution {
 public:
-	std::vector<int> twoSum(std::vector<int>& input, int target);
+	struct Num {
+		int val;
+		int index;
+	};
+
+	static bool NumCompare(Num a, Num b);
+
+	std::vector<int> twoSum(std::vector<int>& nums, int target);
 };
 
 }  // namespace two_sum

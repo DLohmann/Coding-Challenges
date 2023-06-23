@@ -18,3 +18,9 @@ TEST(TwoSum, Test1) {
     Solution sol = Solution();
     EXPECT_THAT(sol.twoSum(input, 9), ElementsAreArray({0, 1}));
 }
+
+TEST(TwoSum, Test2) {
+    std::vector<int> input = {3,2,4};
+    Solution sol = Solution();
+    EXPECT_THAT(sol.twoSum(input, 6), ElementsAreArray({1, 2}));
+}
