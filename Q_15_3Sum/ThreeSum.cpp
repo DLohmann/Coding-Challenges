@@ -169,7 +169,7 @@ std::vector<std::vector<int>> Solution::threeSumFastest(std::vector<int>& input)
 	printArr(nums);
 	// nums.erase(std::unique(nums.begin(), nums.end()), nums.end());
 	std::list<std::vector<int> > triplets;
-	unsigned int i = 0, j, k = nums.size() - 1;
+	unsigned int i = 0, k = nums.size() - 1;
 	do {
 		std::cout << "outer search" << std::endl;
 		search_result outer_search = threeSumFastestSearch(nums, i, k);
