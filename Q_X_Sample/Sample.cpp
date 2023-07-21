@@ -9,7 +9,7 @@
 namespace sample {
 
 std::vector<std::vector<int>> Solution::sample(std::vector<int>& input) {
-	return {};
+    return {};
 }
 
 } // namespace sample
