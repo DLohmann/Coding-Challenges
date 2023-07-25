@@ -10,15 +10,14 @@
 
 using namespace std;
 using namespace ::testing;
-using ::nums_size_times_queries_size_solution::Solution;
 
 TEST(MaximumXorWithElementFromArray, Test1) {
     vector<int> nums = {0, 1, 2, 3, 4};
     vector<vector<int>> queries = {{3, 1},
                                    {1, 3},
                                    {5, 6}};
-    Solution sol;
-    EXPECT_THAT(sol.maximizeXor(nums, queries), ElementsAre(3, 3, 7));
+    EXPECT_THAT(::nums_size_times_queries_size_solution::Solution().maximizeXor(nums, queries), ElementsAre(3, 3, 7));
+    EXPECT_THAT(::bit_trie_solution::Solution().maximizeXor(nums, queries), ElementsAre(3, 3, 7));
 }
 
 TEST(MaximumXorWithElementFromArray, Test2) {
@@ -26,6 +25,6 @@ TEST(MaximumXorWithElementFromArray, Test2) {
     vector<vector<int>> queries = {{12, 4},
                                    {8, 1},
                                    {6, 3}};
-    Solution sol;
-    EXPECT_THAT(sol.maximizeXor(nums, queries), ElementsAre(15, -1, 5));
+    EXPECT_THAT(::nums_size_times_queries_size_solution::Solution().maximizeXor(nums, queries), ElementsAre(15, -1, 5));
+    EXPECT_THAT(::bit_trie_solution::Solution().maximizeXor(nums, queries), ElementsAre(15, -1, 5));
 }

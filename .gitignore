@@ -1,5 +1,8 @@
 # Stuff to ignore in repository
 
+# Large Leetcode test cases
+Q_1707_Maximum_XOR_With_an_Element_From_Array/debugging_special_test_case_63/*.txt
+
 # Visual studio code settings
 .vscode
 settings.json

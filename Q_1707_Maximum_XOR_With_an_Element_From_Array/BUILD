@@ -10,6 +10,7 @@ cc_library(
 cc_test(
   name = "MaximumXorWithElementFromArray_test",
   size = "small",
+  timeout = "moderate",
   srcs = ["MaximumXorWithElementFromArray_test.cpp"],
   deps = ["@com_google_googletest//:gtest_main",
           "@com_google_googletest//:gtest",
