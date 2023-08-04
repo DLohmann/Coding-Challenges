@@ -15,6 +15,7 @@ public:
 }  // namespace nums_size_times_queries_size_solution
 
 
+// ACCEPTED:
 // This solution is O(nums.size() + queries.size()), which was accepted by leetcode.
 namespace bit_trie_solution {
 
@@ -24,7 +25,6 @@ public:
 };
 
 }  // namespace bit_trie_solution
-// TODO: Make solution using binary trie. Should work in O(nums.size() + queries.size()).
 
 
 #endif  // MaximumXorWithElementFromArray_H_
