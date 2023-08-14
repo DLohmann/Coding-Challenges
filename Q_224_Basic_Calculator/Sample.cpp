@@ -113,23 +113,27 @@ namespace sample {
                 }
             }
 
-            vector<int> result (input.size());
             for (int i = 0; i < input.size(); i++) {
                 input[i]->evaluate();
-                result[i] = input[i]->value;
             }
+
+            // Currently all operations should have 2 parameters; one on right and one on left.
+            // Right parameter is added first, to deal with cases like "+1"  or "-1".
+            int right_parameter = input[0]->value;
+            int left_parameter = input[1]->value;
+
             switch(operation) {
                 case TokenOperationType::plus:
-                    value = result[0] + result[1];
+                    value = left_parameter + right_parameter;
                     break;
                 case TokenOperationType::minus:
-                    value = result[0] - result[1];
+                    value = left_parameter - right_parameter;
                     break;
                 case TokenOperationType::multiply:
-                    value = result[0] * result[1];
+                    value = left_parameter * right_parameter;
                     break;
                 case TokenOperationType::divide:
-                    value = result[0] / result[1];
+                    value = left_parameter / right_parameter;
                     break;
                 default:
                     cout << "Unknown operation" << endl;
@@ -212,7 +216,10 @@ namespace sample {
 
     int Solution::calculate(string s) {
         cout << "calculate(\"" << s << "\")" <<  endl;
-        // Parse string into list of tokens
+
+
+
+        // Tokenizer: Parse string into list of tokens
         list<Token*> tokens;
         for (long unsigned int i = 0; i < s.size();) {
             if (s[i] == ' ') {
@@ -249,11 +256,11 @@ namespace sample {
             }
 
         }
-
         if (tokens.empty()) {
             cout << "No tokens found!" << endl;
             return INT_MIN;
         }
+
         // Set token neighbors, between tokens
         list<Token*>::iterator prev = tokens.begin();
         cout << endl << "Neighbors" << endl;
@@ -272,25 +279,25 @@ namespace sample {
         printTokens(tokens);
 
         
-        // Parse number tokens first (lowest priority), then parse operation tokens from
-        // lowest priority to highest priority into operation tree, with lowest priority
-        // (numbers) at the leaves. All leaf nodes should be numbers, but all parent
-        // nodes should be operations. Build tree using bottom-up approach.
 
+
+        // Prioritize tokens by order of operations. Number tokens first (lowest priority),
+        // then parse operation tokens from lowest priority to highest priority into operation
+        // tree, with lowest priority (numbers) at the leaves. All leaf nodes should be numbers,
+        // but all parent nodes should be operations. Build tree using bottom-up approach.
         vector<Token*> prioritizer(tokens.begin(), tokens.end());
         sort(prioritizer.begin(), prioritizer.end(),
                 [](Token* x, Token* y){
                     return x->priority < y->priority;
                 }
             );
-        
-        // Sort by priority
+
         cout << "Prioritized tokens:" << endl;
         for (Token* token : prioritizer) {
             cout << token->str << endl;
         }
 
-        // Skip over numbers
+        // Skip over numbers (priority 0)
         int i;
         for (i = 0; i < prioritizer.size(); i++) {
             if (prioritizer[i]->type != Token::TokenType::number) {
@@ -299,36 +306,35 @@ namespace sample {
         }
         cout << i << " numbers found" << endl;
 
-
-        // Parse operation low priority tokens (*/) then high priority
+        // Build expression tree. Set operation Token inputs and
+        // parents. Parse operation low priority tokens (*/) then high priority
         // tokens (+-) left to right.
-        // Set operation Token inputs and parents.
-        for (;i < prioritizer.size(); i++) {
+        for (; i < prioritizer.size(); i++) {
             Token* token = prioritizer[i];
-            
 
-            // Add left neighbor (or ancestor without parent) to input
-            if (token->left_neighbor == nullptr) {
-                cout << "Error: Token \"" << token->str << "\" does not have left neighbor token." << endl;
-            }
-            Token* parameter = token->left_neighbor;
-            while(parameter->parent != nullptr) {
-                parameter = parameter->parent;
-            }
-            parameter->parent = token;
-            token->input.push_back(parameter);
-
-
+            Token* right_parameter;
             // Add right neighbor (or ancestor without parent) to input
             if (token->right_neighbor == nullptr) {
                 cout << "Error: Token \"" << token->str << "\" does not have right neighbor token." << endl;
             }
-            parameter = token->right_neighbor;
-            while(parameter->parent != nullptr) {
-                parameter = parameter->parent;
+            right_parameter = token->right_neighbor;
+            while(right_parameter->parent != nullptr) {
+                right_parameter = right_parameter->parent;
             }
-            parameter->parent = token;
-            token->input.push_back(parameter);
+            right_parameter->parent = token;
+            token->input.push_back(right_parameter);
+            
+            Token* left_parameter;
+            // Add left neighbor (or ancestor without parent) to input
+            if (token->left_neighbor == nullptr) {
+                cout << "Error: Token \"" << token->str << "\" does not have left neighbor token." << endl;
+            }
+            left_parameter = token->left_neighbor;
+            while(left_parameter->parent != nullptr) {
+                left_parameter = left_parameter->parent;
+            }
+            left_parameter->parent = token;
+            token->input.push_back(left_parameter);
         }
 
         
@@ -351,9 +357,20 @@ namespace sample {
 } // namespace sample
 
 
-// TODO: Add support for parenthesis ().
+
+// TODO: Add support for negative sign -. Approaches:
+// - If an operator token - or + does not have a left neighbor token, then set the result
+//   of the left neighbor token to 0.
+// - If an operator token - or + does not have a left neighbor token but does have a right
+//   neighbor token, then insert a '0' number token as left token.
+// - If an operator - or + does not have a left neighbor token but does have a right
+//   neighbor token, then delete this operator token and set the right neighbor token
+//   to negative for - or leave it alone for +. The problem is that for parenthesis '('
+//   it would be difficult to set value to negative if not evaluated yet.
+
+// TODO: Add support for parenthesis (). Several approaches:
 // - Maybe make a different TokenType "grouping"
-//      * Only 1 input in numRequiredInputs and priority 0.
+//      * Only 1 input in numRequiredInputs and priority 1.
 //      * Evaluate() can return same input value.
 //      * When tokenizing '(', move right until # close parenthesis ')' after the
 //       '(' equals one (for the '(') plus the number of '(' after the initial
@@ -364,4 +381,12 @@ namespace sample {
 //      * If '(' or ')' are unbalanced, return error.
 //      * If an operation had beginning or end of string, or '(' or ')' next to
 //        it, so the operation lacks parameters, then return error.
+// - Search for pairs of parenthesis within group s, and get the substring. Then
+//   call calculate(string s) recursively on the substring and calculate the
+//   value. Then use 1 single number token for the entire substring in parenthesis.
+//   For nested parenthesis, this should happen recursively.
+// - Every item in parenthesis could have priority adjusted so it could be 
+//   evaluated separately. So parenthesis would not be a token, but would adjust
+//   the order of tokens within it, and ensure that they must be resolved before
+//   interacting with outside tokens.
 
