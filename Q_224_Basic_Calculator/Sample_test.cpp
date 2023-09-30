@@ -6,7 +6,7 @@
 #include<utility>
 
 // Test with bazel from the test file directory:
-// bazel test --test_output=all "//Q_X_Sample:Sample_test"
+// bazel test --test_output=all Q_224_Basic_Calculator:all
 
 using namespace std;
 
@@ -24,9 +24,7 @@ TEST(Sample, TestSingleNumber) {
 
     for (pair<string, int> p : input_and_expected_solution) {
         int output = Solution().calculate(p.first);
-        cout << p.first << " == " << output << endl;
-        cout << endl << endl << endl << endl;
-        EXPECT_EQ(output, p.second);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
     }
 }
 
@@ -39,9 +37,7 @@ TEST(Sample, TestAddition) {
 
     for (pair<string, int> p : input_and_expected_solution) {
         int output = Solution().calculate(p.first);
-        cout << p.first << " == " << output << endl;
-        cout << endl << endl << endl << endl;
-        EXPECT_EQ(output, p.second);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
     }
 }
 
@@ -55,9 +51,7 @@ TEST(Sample, TestMultiplication) {
 
     for (pair<string, int> p : input_and_expected_solution) {
         int output = Solution().calculate(p.first);
-        cout << p.first << " == " << output << endl;
-        cout << endl << endl << endl << endl;
-        EXPECT_EQ(output, p.second);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
     }
 }
 
@@ -71,9 +65,7 @@ TEST(Sample, TestDivision) {
 
     for (pair<string, int> p : input_and_expected_solution) {
         int output = Solution().calculate(p.first);
-        cout << p.first << " == " << output << endl;
-        cout << endl << endl << endl << endl;
-        EXPECT_EQ(output, p.second);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
     }
 }
 
@@ -85,49 +77,63 @@ TEST(Sample, TestSubtraction) {
 
     for (pair<string, int> p : input_and_expected_solution) {
         int output = Solution().calculate(p.first);
-        cout << p.first << " == " << output << endl;
-        cout << endl << endl << endl << endl;
-        EXPECT_EQ(output, p.second);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
     }
 }
 
-// TEST(Sample, TestNegative) {
+TEST(Sample, TestNegative) {
+    vector< pair<string, int> > input_and_expected_solution = {
+        {"-99", -99},
+        {" -1 ", -1},
+        {" - 1 ", -1},
+        {" - - 1 ", 1},
+        {"--1", 1},
+        {"-0", 0}
+    };
+
+    for (pair<string, int> p : input_and_expected_solution) {
+        int output = Solution().calculate(p.first);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
+    }
+}
+
+TEST(Sample, TestNegativeWithOperation) {
+    vector< pair<string, int> > input_and_expected_solution = {
+        {"-99 * 2", -198},
+        {"-99*2", -198},
+        {"2 * - 99", -198},
+        {"2 * -99", -198},
+        {"2 *- 99", -198},
+        {"2 *-99", -198},
+        {"2* - 99", -198},
+        {"2* -99", -198},
+        {"2*- 99", -198},
+        {"2*-99", -198},
+        {" -1 *0", 0},
+        {" - 1 * 100", -100},
+        {"-1*-1", 1},
+        {"-1*--1", -1},
+        {"--1*-1", -1}
+    };
+
+    for (pair<string, int> p : input_and_expected_solution) {
+        int output = Solution().calculate(p.first);
+        EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
+    }
+}
+
+// TEST(Sample, TestNegativeGrouping) {
 //     vector< pair<string, int> > input_and_expected_solution = {
-//         {"-99", -99},
-//         {" -1 ", -1},
-//         {" - 1 ", -1},
-//         {"-0", 0}
+//         {"-(1)", -1},
+//         {"-(-1)", 1},
+//         {"(-(-1))", 1},
+//         {"-(-(-1))", -1},
+//         {"-(1)-(1)", 0}
 //     };
 
 //     for (pair<string, int> p : input_and_expected_solution) {
 //         int output = Solution().calculate(p.first);
-//         cout << p.first << " == " << output << endl;
-//         cout << endl << endl << endl << endl;
-//         EXPECT_EQ(output, p.second);
-//     }
-// }
-
-// TEST(Sample, TestNegativeOperation) {
-//     vector< pair<string, int> > input_and_expected_solution = {
-//         {"-99 * 2", -198},
-//         {"-99*2", -198},
-//         {"2 * - 99", -198},
-//         {"2 * -99", -198},
-//         {"2 *- 99", -198},
-//         {"2 *-99", -198},
-//         {"2* - 99", -198},
-//         {"2* -99", -198},
-//         {"2*- 99", -198},
-//         {"2*-99", -198},
-//         {" -1 *0", 0},
-//         {" - 1 * 100", -100}
-//     };
-
-//     for (pair<string, int> p : input_and_expected_solution) {
-//         int output = Solution().calculate(p.first);
-//         cout << p.first << " == " << output << endl;
-//         cout << endl << endl << endl << endl;
-//         EXPECT_EQ(output, p.second);
+//         EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
 //     }
 // }
 
@@ -141,9 +147,7 @@ TEST(Sample, TestSubtraction) {
 
 //     for (pair<string, int> p : input_and_expected_solution) {
 //         int output = Solution().calculate(p.first);
-//         cout << p.first << " == " << output << endl;
-//         cout << endl << endl << endl << endl;
-//         EXPECT_EQ(output, p.second);
+//         EXPECT_EQ(output, p.second) << "Incorrect: " << p.first << " != " << output << endl << endl << endl << endl << endl;
 //     }
 // }
 

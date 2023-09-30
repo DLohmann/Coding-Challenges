@@ -4,6 +4,7 @@ cc_library(
   name = "Sample",
   hdrs = ["Sample.h"],
   srcs = ["Sample.cpp"],
+  deps = ["@com_github_google_glog//:glog"],
   visibility = ["//visibility:public"],
 )
 

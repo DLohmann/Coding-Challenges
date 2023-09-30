@@ -7,6 +7,8 @@
 #include<iostream>
 #include<climits>
 
+#include <glog/logging.h>
+
 using namespace std;
 
 namespace sample {
@@ -75,7 +77,7 @@ namespace sample {
                 case TokenOperationType::minus:
                     return 4;
                 default:
-                    cout << "Strange type! (priority -1)" << endl;
+                    LOG(INFO) << "Strange type! (priority -1)" << endl;
                     return -1;
             }
         }
@@ -98,22 +100,22 @@ namespace sample {
         int evaluate() {
             if (type == TokenType::number) {
                 // Number is already evaluated
-                //cout << "Can only evaluate operation, not TokenType " << type << endl;
+                //LOG(INFO) << "Can only evaluate operation, not TokenType " << type << endl;
                 return value;
             }
 
-            if (input.size() < numRequiredInputs()) {
-                cout << "Evaluate() called for \"" << str << "\" with " << input.size() << " inputs, but " << numRequiredInputs() << " are required for this token type!" << endl;
+            if (input.size() < size_t(numRequiredInputs())) {
+                LOG(INFO) << "Evaluate() called for \"" << str << "\" with " << input.size() << " inputs, but " << numRequiredInputs() << " are required for this token type!" << endl;
                 return INT_MIN;
             }
             for (int i = 0; i < numRequiredInputs(); i++) {
                 if (input[i] == nullptr) {
-                    cout << "evaluate() called on Token \"" << str << "\" before input " << i << " set! Requires " << numRequiredInputs() << " inputs." << endl;
+                    LOG(INFO) << "evaluate() called on Token \"" << str << "\" before input " << i << " set! Requires " << numRequiredInputs() << " inputs." << endl;
                     return INT_MIN;
                 }
             }
 
-            for (int i = 0; i < input.size(); i++) {
+            for (long unsigned int i = 0; i < input.size(); i++) {
                 input[i]->evaluate();
             }
 
@@ -136,29 +138,42 @@ namespace sample {
                     value = left_parameter / right_parameter;
                     break;
                 default:
-                    cout << "Unknown operation" << endl;
+                    LOG(INFO) << "Unknown operation" << endl;
                     value = INT_MIN;
             }
-            cout << "evaluate token \"" << str << "\" returns " << value << endl;
+            LOG(INFO) << "evaluate token \"" << str << "\" returns " << value << endl;
             return value;
         }
     };
 
     Token* numberToken(string& s, int start_index) {
-        cout << "\tnumberToken \"" << s << "\", start_index: " << start_index << endl << "\t";
+        LOG(INFO) << "\tnumberToken \"" << s << "\", start_index: " << start_index << endl << "\t";
         int val = 0;
-        int i;
-        for (i = start_index; '0' <= s[i] && s[i] <= '9'; i++) {
-            val = (val * 10) + int(s[i] - '0');
-            cout << s[i];
+        int i = start_index;
+        bool is_negative = false;
+        if (s[start_index] == '-') {
+            while(i < s.length() && !('0' <= s[i] && s[i] <= '9')) {
+                if (s[i] == '-') {
+                    is_negative = !is_negative;
+                }
+                i++;
+            }
+            CHECK(i < s.length()) << "Negative number \"" << s.substr(start_index) << "\" reached unexpected end of string." << endl;
         }
-        cout << endl;
-        cout << "\tval: " << val << ", char length: " << i - start_index << endl;
+        for (; '0' <= s[i] && s[i] <= '9'; i++) {
+            val = (val * 10) + int(s[i] - '0');
+            LOG(INFO) << s[i];
+        }
+        if (is_negative) {
+            val *= -1;
+        }
+        LOG(INFO) << endl;
+        LOG(INFO) << "\tval: " << val << ", char length: " << i - start_index << endl;
         return new Token(start_index, i, val, s.substr(start_index, i - start_index));
     }
 
     Token* operationToken(string& s, int start_index) {
-        cout << "\toperationToken \"" << s << "\", start_index: " << start_index << endl << "\toperation\'" << s[start_index] << "\'" << endl ;
+        LOG(INFO) << "\toperationToken \"" << s << "\", start_index: " << start_index << endl << "\toperation\'" << s[start_index] << "\'" << endl ;
 
         Token::TokenOperationType operation;
         switch(s[start_index]) {
@@ -176,46 +191,46 @@ namespace sample {
                 break;
             default:
                 operation = Token::TokenOperationType::na;
-                cout << "Error! Unknown operation \'" << s[start_index] << "\'" << endl;
+                LOG(INFO) << "Error! Unknown operation \'" << s[start_index] << "\'" << endl;
         }
         return new Token(start_index, start_index + 1, operation, s.substr(start_index, 1));
     }
 
     void printTokens(list<Token*>& tokens) {
-        cout << "Tokens: {";
+        LOG(INFO) << "Tokens: {";
         for (Token* t : tokens) {
             if (t->type == Token::TokenType::number) {
-                cout << t->value;
+                LOG(INFO) << t->value;
                 continue;
             }
             switch(t->operation) {
                 case Token::TokenOperationType::plus:
-                    cout << "+";
+                    LOG(INFO) << "+";
                     break;
                 case Token::TokenOperationType::minus:
-                    cout << "-";
+                    LOG(INFO) << "-";
                     break;
                 case Token::TokenOperationType::multiply:
-                    cout << "*";
+                    LOG(INFO) << "*";
                     break;
                 case Token::TokenOperationType::divide:
-                    cout << "/";
+                    LOG(INFO) << "/";
                     break;
                 default:
-                    cout << " unknown token ";
+                    LOG(INFO) << " unknown token ";
             }
         }
-        cout << "}, size = " << tokens.size() << endl;
-        cout << "Priorities: {  ";
+        LOG(INFO) << "}, size = " << tokens.size() << endl;
+        LOG(INFO) << "Priorities: {  ";
         for (Token* t : tokens) {
-            cout << t->priority << "  ";
+            LOG(INFO) << t->priority << "  ";
         }
-        cout << "}" << endl;
+        LOG(INFO) << "}" << endl;
     }
 
 
     int Solution::calculate(string s) {
-        cout << "calculate(\"" << s << "\")" <<  endl;
+        LOG(INFO) << "calculate(\"" << s << "\")" <<  endl;
 
 
 
@@ -223,12 +238,24 @@ namespace sample {
         list<Token*> tokens;
         for (long unsigned int i = 0; i < s.size();) {
             if (s[i] == ' ') {
-                cout << "skip \' \'" << endl;
+                LOG(INFO) << "skip \' \'" << endl;
                 i++;
                 continue;
             }
-            if ('0' <= s[i] && s[i] <='9') {
-                cout << "number" << endl;
+
+            // If the character is a number, interpret as positive integer.
+            // If the character is negative '-', and any of the following is true:
+            // - No tokens have been added (tokens is empty, so beginning of expression) OR
+            // - The previous token is an opening grouping symbol, such as '(' OR
+            // - The previous token is an operation such as +-*/
+            // Then interpret as negative.
+            //
+            if (('0' <= s[i] && s[i] <='9') || 
+                    (s[i] == '-' && 
+                        (tokens.empty() || tokens.back()->str == "(" || tokens.back()->type == Token::TokenType::operation)
+                    )
+                ) {
+                LOG(INFO) << "number" << endl;
                 Token* t = numberToken(s, i);
                 i = t->end_index;
                 tokens.push_back(t);
@@ -241,15 +268,17 @@ namespace sample {
                 case '*':
                 case '/':
                     {
-                        cout << "operation" << endl;
+                        LOG(INFO) << "operation" << endl;
                         Token* t = operationToken(s, i);
                         i = t->end_index;
                         tokens.push_back(t);
                         continue;
                     }
+                case '(':
+                case ')':
                 default:
                     {
-                        cout << "unhandled \'" << s[i] << "\'" << endl;
+                        LOG(INFO) << "unhandled \'" << s[i] << "\'" << endl;
                         i++;
                         continue;
                     }
@@ -257,13 +286,13 @@ namespace sample {
 
         }
         if (tokens.empty()) {
-            cout << "No tokens found!" << endl;
+            LOG(INFO) << "No tokens found!" << endl;
             return INT_MIN;
         }
 
         // Set token neighbors, between tokens
         list<Token*>::iterator prev = tokens.begin();
-        cout << endl << "Neighbors" << endl;
+        LOG(INFO) << endl << "Neighbors" << endl;
         for (list<Token*>::iterator it = next(tokens.begin()); it != tokens.end(); it++) {
             (*prev)->right_neighbor = *it;
             (*it)->left_neighbor = *prev;
@@ -271,11 +300,11 @@ namespace sample {
             // int previous_length = (*prev)->end_index - previous_start;
             // int current_start   = (*it)->start_index;
             // int current_length  = (*it)->end_index - current_start;
-            cout << "\t\"" << (*prev)->str << "\" and \"" << (*it)->str << "\"" << endl;
+            LOG(INFO) << "\t\"" << (*prev)->str << "\" and \"" << (*it)->str << "\"" << endl;
             prev = it;
         }
 
-        cout << endl;
+        LOG(INFO) << endl;
         printTokens(tokens);
 
         
@@ -292,19 +321,19 @@ namespace sample {
                 }
             );
 
-        cout << "Prioritized tokens:" << endl;
+        LOG(INFO) << "Prioritized tokens:" << endl;
         for (Token* token : prioritizer) {
-            cout << token->str << endl;
+            LOG(INFO) << token->str << endl;
         }
 
         // Skip over numbers (priority 0)
-        int i;
+        long unsigned int i;
         for (i = 0; i < prioritizer.size(); i++) {
             if (prioritizer[i]->type != Token::TokenType::number) {
                 break;
             }
         }
-        cout << i << " numbers found" << endl;
+        LOG(INFO) << i << " numbers found" << endl;
 
         // Build expression tree. Set operation Token inputs and
         // parents. Parse operation low priority tokens (*/) then high priority
@@ -315,7 +344,7 @@ namespace sample {
             Token* right_parameter;
             // Add right neighbor (or ancestor without parent) to input
             if (token->right_neighbor == nullptr) {
-                cout << "Error: Token \"" << token->str << "\" does not have right neighbor token." << endl;
+                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have right neighbor token." << endl;
             }
             right_parameter = token->right_neighbor;
             while(right_parameter->parent != nullptr) {
@@ -327,7 +356,7 @@ namespace sample {
             Token* left_parameter;
             // Add left neighbor (or ancestor without parent) to input
             if (token->left_neighbor == nullptr) {
-                cout << "Error: Token \"" << token->str << "\" does not have left neighbor token." << endl;
+                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have left neighbor token." << endl;
             }
             left_parameter = token->left_neighbor;
             while(left_parameter->parent != nullptr) {
@@ -340,12 +369,12 @@ namespace sample {
         
         Token* root = prioritizer.back();
         while (root->parent != nullptr) {
-            cout << "Moving root from \"" << root->str << "\" to \"" << root->parent->str << "\"" <<  endl;
+            LOG(INFO) << "Moving root from \"" << root->str << "\" to \"" << root->parent->str << "\"" <<  endl;
             root = root->parent;
         }
 
         // Recursive post-order traversal of expression tree to evaluate
-        cout << endl << "root->evaluate: (root == " << root->str << "):" << endl;
+        LOG(INFO) << endl << "root->evaluate: (root == " << root->str << "):" << endl;
         int result = root->evaluate();
 
         for (Token* token : tokens) {
@@ -367,6 +396,9 @@ namespace sample {
 //   neighbor token, then delete this operator token and set the right neighbor token
 //   to negative for - or leave it alone for +. The problem is that for parenthesis '('
 //   it would be difficult to set value to negative if not evaluated yet.
+// - During tokenization, after reaching the negative sign '-', if either no tokens have
+//   been added yet so '-' is the first one, or the previous token was opening grouping
+//   '(' or an operation +-*/, then interpret as negative.
 
 // TODO: Add support for parenthesis (). Several approaches:
 // - Maybe make a different TokenType "grouping"
