@@ -387,18 +387,6 @@ namespace sample {
 
 
 
-// TODO: Add support for negative sign -. Approaches:
-// - If an operator token - or + does not have a left neighbor token, then set the result
-//   of the left neighbor token to 0.
-// - If an operator token - or + does not have a left neighbor token but does have a right
-//   neighbor token, then insert a '0' number token as left token.
-// - If an operator - or + does not have a left neighbor token but does have a right
-//   neighbor token, then delete this operator token and set the right neighbor token
-//   to negative for - or leave it alone for +. The problem is that for parenthesis '('
-//   it would be difficult to set value to negative if not evaluated yet.
-// - During tokenization, after reaching the negative sign '-', if either no tokens have
-//   been added yet so '-' is the first one, or the previous token was opening grouping
-//   '(' or an operation +-*/, then interpret as negative.
 
 // TODO: Add support for parenthesis (). Several approaches:
 // - Maybe make a different TokenType "grouping"
