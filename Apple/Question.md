@@ -1,9 +1,8 @@
 # Apple Interview
-### 10/4/2023
+### This was an Apple coding interview question I was asked on 10/4/2023.
 
-# Adjust the amount of rounds played between each pair of bots.
-
-# Is the number of games played as expected? Why not?
+1) Adjust the amount of rounds played between each pair of bots.
+1) Is the number of games played as expected? Why not?
 
 To run:
 ```bash
