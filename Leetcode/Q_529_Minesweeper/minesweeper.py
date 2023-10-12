@@ -1,44 +1,46 @@
-"""
-The goal is to build few classes and implement some methods 
-for the game "Minesweeper".
 
-Rules of the game:
-  if click on mine: 
-	game over
-  elif click on a cell that has neighboring mines:
-	reveal the cell whose value is the number of neighboring mines
-  elif click on a cell that does not have any neighboring mines:
-	recurssively click on its neighbors
-
-Some possible classes:
-- Position: an x-y coordinate
-- Board: a collection of (x, y) positions
-- State: the value displayed at the position to the user
-- Game: a single instance of a game
-These are just some suggestions. You can dicide to use any combination of
-classes that makes sense to you.
-
-You need to have at least the following methods publically accessible:
-def initialize(self, height, width, num_mines, initial_click=None):
-	# initialize a fix-sized board with given number of mines.
-	# if the optional parameter initial_click is specified, no mine should be placed there
-	pass
-
-def click(self, position):
-	# change the states of some points on the borad following the rules
-		pass
-
-def visualize(self):
-	# "." for unexplored
-	# " " for explored but no neighboring mines
-	# "#" for explored with # of mines
-	pass
-"""
 from numpy.random import randint
 import numpy as np
 import re
+import icecream
 
 class Game:
+	"""
+	The goal is to build few classes and implement some methods 
+	for the game "Minesweeper".
+
+	Rules of the game:
+	if click on mine: 
+		game over
+	elif click on a cell that has neighboring mines:
+		reveal the cell whose value is the number of neighboring mines
+	elif click on a cell that does not have any neighboring mines:
+		recurssively click on its neighbors
+
+	Some possible classes:
+	- Position: an x-y coordinate
+	- Board: a collection of (x, y) positions
+	- State: the value displayed at the position to the user
+	- Game: a single instance of a game
+	These are just some suggestions. You can dicide to use any combination of
+	classes that makes sense to you.
+
+	You need to have at least the following methods publically accessible:
+	def initialize(self, height, width, num_mines, initial_click=None):
+		# initialize a fix-sized board with given number of mines.
+		# if the optional parameter initial_click is specified, no mine should be placed there
+		pass
+
+	def click(self, position):
+		# change the states of some points on the borad following the rules
+			pass
+
+	def visualize(self):
+		# "." for unexplored
+		# " " for explored but no neighboring mines
+		# "#" for explored with # of mines
+		pass
+	"""
 	def __init__(self, height = 8, width = 8, num_mines = 8):
 		self.explored = np.full((height, width), fill_value = -1, dtype = np.int8)
 		self.mines = np.zeros((height, width), dtype = np.int8)
@@ -132,7 +134,7 @@ def initialize(height, width, num_mines, initial_click=None):
 		game.printMines()
 		val = input("Enter a position to click on (row, column): ")
 		val = re.split("[^0-9]", val.strip())
-		game.click((int(val[0]), int(val[1])))
+		icecream.ic(game.click((int(val[0]), int(val[1]))))
 		game.visualize()
 	game.printMines()
 	if (game.check_win()):
