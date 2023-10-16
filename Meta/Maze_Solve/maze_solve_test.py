@@ -1,4 +1,4 @@
-import maze_solve
+from . import maze_solve
 import unittest
 
 class TestMazeSolve(unittest.TestCase):
