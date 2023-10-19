@@ -40,3 +40,10 @@ Notice that the order of the output and the order of the triplets does not matte
 	<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>
 </ul>
 </div></div>
+
+### To test:
+```bash
+bazel test Leetcode/Q_15_3Sum:all
+```
+
+Solution inspired by [this solution](https://leetcode.com/problems/3sum/solutions/3186495/best-c-3-solution-two-pointers-sorting-hash-table-brute-force-optimize/).
