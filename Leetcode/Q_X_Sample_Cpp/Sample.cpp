@@ -8,8 +8,8 @@
 
 namespace sample {
 
-std::vector<std::vector<int>> Solution::sample(std::vector<int>& input) {
-    return {};
+std::vector<int> Solution::sample(std::vector<int>& input) {
+    return {1, 2};
 }
 
 } // namespace sample

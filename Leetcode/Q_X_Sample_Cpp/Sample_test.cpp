@@ -4,10 +4,9 @@
 #include <gtest/gtest.h>
 #include<iostream>
 
-// Test with bazel from the test file directory:
-// bazel test --test_output=all "//Q_X_Sample:Sample_test"
-
 using ::sample::Solution;
 
 TEST(Sample, Test1) {
+    std::vector<int> input;
+    EXPECT_THAT(Solution().sample(input), ::testing::ElementsAre(1, 2));
 }

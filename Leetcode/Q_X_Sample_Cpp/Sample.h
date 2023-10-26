@@ -7,7 +7,7 @@ namespace sample {
 
 class Solution {
 public:
-    std::vector<std::vector<int>> sample(std::vector<int>& input);
+    std::vector<int> sample(std::vector<int>& input);
 };
 
 }  // namespace sample
