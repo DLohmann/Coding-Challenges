@@ -1,3 +1,4 @@
+from typing import List
 
 def fizzbuzz(n: int):
     if n % 3 != 0 and n % 5 != 0:
