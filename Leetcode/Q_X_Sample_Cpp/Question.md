@@ -8,5 +8,5 @@ TODO: Copy and paste question from HTML on LeetCode.
 
 Test with bazel from the correct directory:
 ```bash
-bazel test --test_output=all "//Leetcode/Q_X_Sample_Cpp:Sample_test"
+bazel test --test_output=all "//Leetcode/Q_X_Sample_Cpp:Sample_test" (ensure path has no spaces)
 ```
