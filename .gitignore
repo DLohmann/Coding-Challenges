@@ -4,7 +4,8 @@
 Moebius_Solutions/*
 
 # Large Leetcode test cases
-Q_1707_Maximum_XOR_With_an_Element_From_Array/debugging_special_test_case_63/*.txt
+Leetcode/Q_211_Design_Add_and_Search_Words_Data_Structure/case_9.csv
+Leetcode/Q_1707_Maximum_XOR_With_an_Element_From_Array/debugging_special_test_case_63/*.txt
 
 # Visual studio code settings
 .vscode
