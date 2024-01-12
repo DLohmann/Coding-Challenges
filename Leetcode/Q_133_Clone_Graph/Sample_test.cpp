@@ -9,6 +9,9 @@ using ::sample::Solution;
 using ::sample::Node;
 
 void FindNodes(std::set<Node*>& found_nodes, Node* head) {
+    if (head == nullptr) {
+        return;
+    }
     std::cout << "Found node " << head->val << " with " << head->neighbors.size() << " neighbors." << std::endl;
     found_nodes.insert(head);
     for (Node* neighbor : head->neighbors) {
@@ -17,6 +20,30 @@ void FindNodes(std::set<Node*>& found_nodes, Node* head) {
         }
     }
 }
+
+
+void CompareGraphs(std::set<Node*>& found_nodes, std::set<Node*>& found_clone_nodes) {
+    EXPECT_EQ(found_clone_nodes.size(), found_nodes.size());
+    std::set<Node*>::iterator found_nodes_it = found_nodes.begin();
+    std::set<Node*>::iterator found_clone_nodes_it = found_clone_nodes.begin();
+    while (found_nodes_it != found_nodes.end() || found_clone_nodes_it != found_clone_nodes.end()) {
+        Node* node = *found_nodes_it;
+        Node* clone = *found_clone_nodes_it;
+        EXPECT_EQ(clone->val, node->val) << "Clone #" << clone->val << " was found in same order as node #" << node->val <<
+            ". Corresponding nodes must have the same value.";
+        
+        EXPECT_EQ(clone->neighbors.size(), node->neighbors.size());
+        for (int i = 0; i < node->neighbors.size(); i++) {
+            EXPECT_EQ(clone->neighbors[i]->val, node->neighbors[i]->val) << 
+                "Output clone node #"    << clone->val << " neighbor #" << i << " (" << clone->neighbors[i]->val << ")" <<
+                " does not match node #" << node ->val << " neighbor #" << i << " (" << node ->neighbors[i]->val << ")" << std::endl;
+        }
+
+        found_nodes_it++;
+        found_clone_nodes_it++;
+    }
+}
+
 
 // Testing algorithm:
 // 1) Create original graph. Ensure neighbors are sorted.
@@ -56,26 +83,52 @@ TEST(Sample, Example1) {
     std::cout << "Clone nodes" << std::endl;
     FindNodes(found_clone_nodes, clone_head);
 
-    EXPECT_EQ(found_clone_nodes.size(), found_nodes.size());
+    CompareGraphs(found_nodes, found_clone_nodes);
 
-    std::set<Node*>::iterator found_nodes_it = found_nodes.begin();
-    std::set<Node*>::iterator found_clone_nodes_it = found_clone_nodes.begin();
-    while (found_nodes_it != found_nodes.end() || found_clone_nodes_it != found_clone_nodes.end()) {
-        Node* node = *found_nodes_it;
-        Node* clone = *found_clone_nodes_it;
-        EXPECT_EQ(clone->val, node->val) << "Clone #" << clone->val << " was found in same order as node #" << node->val <<
-            ". Corresponding nodes must have the same value.";
-        
-        EXPECT_EQ(clone->neighbors.size(), node->neighbors.size());
-        for (int i = 0; i < node->neighbors.size(); i++) {
-            EXPECT_EQ(clone->neighbors[i]->val, node->neighbors[i]->val) << 
-                "Output clone node #"    << clone->val << " neighbor #" << i << " (" << clone->neighbors[i]->val << ")" <<
-                " does not match node #" << node ->val << " neighbor #" << i << " (" << node ->neighbors[i]->val << ")" << std::endl;
-        }
-
-        found_nodes_it++;
-        found_clone_nodes_it++;
+    for (Node* clone_node : found_clone_nodes) {
+        delete clone_node;
     }
+}
+
+TEST(Sample, Example2) {
+    // Input: adjList = [[]]
+    // Output: [[]]
+    // Explanation: Note that the input contains one empty list. The graph consists of only one node with val = 1 and it does not have any neighbors.
+    Node one = Node(1);
+
+    Node* clone_head = Solution().cloneGraph(&one);
+
+    std::set<Node*> found_nodes;
+    std::cout << "Expected nodes" << std::endl;
+    FindNodes(found_nodes, &one);
+
+    std::set<Node*> found_clone_nodes;
+    std::cout << "Clone nodes" << std::endl;
+    FindNodes(found_clone_nodes, clone_head);
+
+    CompareGraphs(found_nodes, found_clone_nodes);
+
+    for (Node* clone_node : found_clone_nodes) {
+        delete clone_node;
+    }
+}
+
+TEST(Sample, Example3) {
+    // Input: adjList = []
+    // Output: []
+    // Explanation: This an empty graph, it does not have any nodes.
+
+    Node* clone_head = Solution().cloneGraph(nullptr);
+
+    std::set<Node*> found_nodes;
+    std::cout << "Expected nodes" << std::endl;
+    FindNodes(found_nodes, nullptr);
+
+    std::set<Node*> found_clone_nodes;
+    std::cout << "Clone nodes" << std::endl;
+    FindNodes(found_clone_nodes, clone_head);
+
+    CompareGraphs(found_nodes, found_clone_nodes);
 
     for (Node* clone_node : found_clone_nodes) {
         delete clone_node;
