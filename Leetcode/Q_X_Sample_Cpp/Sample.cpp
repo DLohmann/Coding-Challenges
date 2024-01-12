@@ -8,6 +8,7 @@
 
 namespace sample {
 
+// Don't forget 'Solution::' before function name
 std::vector<int> Solution::sample(std::vector<int>& input) {
     return {1, 2};
 }

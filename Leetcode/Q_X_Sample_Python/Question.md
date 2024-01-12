@@ -1,5 +1,5 @@
 
-# Question __X__: [Sample](leetcode link)
+# Question __X__: [Sample](leetcode_link)
 
 TODO: Copy and paste question from HTML on LeetCode.
 
