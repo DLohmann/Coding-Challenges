@@ -1,6 +1,7 @@
 # Stuff to ignore in repository
 
 # Confidential programming interviews & assessments
+Apple/*
 Moebius_Solutions/*
 
 # Signed Non-Disclosure Agreement for Applied Intuition. Must keep confidential.
