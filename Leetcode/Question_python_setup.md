@@ -13,7 +13,7 @@
     * Remove comment `# The test name must start with letters 'test' ...`.
     * Replace `test_100` with `test_example_1`. Maybe also add example, 2, 3, etc for all the test cases in the problem description.
     * Replace `fizzbuzz` with the leetcode function name.
-    * Replace the outpuit with the expected output from the example.
+    * Replace the output with the expected output from the example.
     * Write the unit test.
 * Run the unit test using the command in Question.md and make sure it passes. If it does not, then debug.
 
