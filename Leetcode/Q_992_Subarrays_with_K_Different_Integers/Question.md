@@ -39,5 +39,5 @@
 
 Test with bazel from the correct directory (ensure path has no spaces):
 ```bash
-bazel test --test_output=all "//Leetcode/Q_992_Subarrays_with_K_Different_Integers:sample_test"
+bazel test --test_output=all //Leetcode/Q_992_Subarrays_with_K_Different_Integers:sample_test
 ```
