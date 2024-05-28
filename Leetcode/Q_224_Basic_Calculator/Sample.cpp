@@ -1,15 +1,13 @@
 #include"Sample.h"
 
-#include<vector>
-#include<list>
-#include<set>
 #include<algorithm>
-#include<iostream>
 #include<climits>
+#include<glog/logging.h>
+#include<iostream>
+#include<list>
+#include<memory>
+#include<vector>
 
-#include <glog/logging.h>
-
-using namespace std;
 
 namespace sample {
     class Token {
@@ -19,7 +17,7 @@ namespace sample {
         enum class TokenOperationType { na, plus, minus, multiply, divide };
 
         // Operation constructor
-        Token(int start_index, int end_index, TokenOperationType operation, string str) {
+        Token(int start_index, int end_index, TokenOperationType operation, std::string str) {
             this->start_index = start_index;
             this->end_index = end_index;
             this->type = TokenType::operation;
@@ -29,7 +27,7 @@ namespace sample {
         }
 
         // Number constructor
-        Token(int start_index, int end_index, int value, string str) {
+        Token(int start_index, int end_index, int value, std::string str) {
             this->start_index = start_index;
             this->end_index = end_index;
             this->value = value;
@@ -49,14 +47,14 @@ namespace sample {
         TokenOperationType operation = TokenOperationType::na;
 
         // Token is an input to the parent node (except for root)
-        Token* parent = nullptr;
+        std::shared_ptr<Token> parent = nullptr;
 
         // If an operation, set this to the input parameters
-        vector<Token*> input;
+        std::vector<std::shared_ptr<Token>> input;
 
         // Adjacent tokens in the original expression.
-        Token* left_neighbor = nullptr;
-        Token* right_neighbor = nullptr;
+        std::shared_ptr<Token> left_neighbor = nullptr;
+        std::shared_ptr<Token> right_neighbor = nullptr;
 
         // TokenOperationType priority for order of operations (GEMDAS)
         // 0: Number. Already evaluated.
@@ -77,13 +75,13 @@ namespace sample {
                 case TokenOperationType::minus:
                     return 4;
                 default:
-                    LOG(INFO) << "Strange type! (priority -1)" << endl;
+                    LOG(INFO) << "Strange type! (priority -1)" << std::endl;
                     return -1;
             }
         }
         
         // string representation of token (for debugging)
-        string str;
+        std::string str;
         
         int numRequiredInputs(){
             if (type == TokenType::number) {
@@ -100,17 +98,17 @@ namespace sample {
         int evaluate() {
             if (type == TokenType::number) {
                 // Number is already evaluated
-                //LOG(INFO) << "Can only evaluate operation, not TokenType " << type << endl;
+                //LOG(INFO) << "Can only evaluate operation, not TokenType " << type << std::endl;
                 return value;
             }
 
             if (input.size() < size_t(numRequiredInputs())) {
-                LOG(INFO) << "Evaluate() called for \"" << str << "\" with " << input.size() << " inputs, but " << numRequiredInputs() << " are required for this token type!" << endl;
+                LOG(INFO) << "Evaluate() called for \"" << str << "\" with " << input.size() << " inputs, but " << numRequiredInputs() << " are required for this token type!" << std::endl;
                 return INT_MIN;
             }
             for (int i = 0; i < numRequiredInputs(); i++) {
                 if (input[i] == nullptr) {
-                    LOG(INFO) << "evaluate() called on Token \"" << str << "\" before input " << i << " set! Requires " << numRequiredInputs() << " inputs." << endl;
+                    LOG(INFO) << "evaluate() called on Token \"" << str << "\" before input " << i << " set! Requires " << numRequiredInputs() << " inputs." << std::endl;
                     return INT_MIN;
                 }
             }
@@ -138,16 +136,16 @@ namespace sample {
                     value = left_parameter / right_parameter;
                     break;
                 default:
-                    LOG(INFO) << "Unknown operation" << endl;
+                    LOG(INFO) << "Unknown operation" << std::endl;
                     value = INT_MIN;
             }
-            LOG(INFO) << "evaluate token \"" << str << "\" returns " << value << endl;
+            LOG(INFO) << "evaluate token \"" << str << "\" returns " << value << std::endl;
             return value;
         }
     };
 
-    Token* numberToken(string& s, int start_index) {
-        LOG(INFO) << "\tnumberToken \"" << s << "\", start_index: " << start_index << endl << "\t";
+    std::shared_ptr<Token> numberToken(std::string& s, int start_index) {
+        LOG(INFO) << "\tnumberToken \"" << s << "\", start_index: " << start_index << std::endl << "\t";
         int val = 0;
         int i = start_index;
         bool is_negative = false;
@@ -158,7 +156,7 @@ namespace sample {
                 }
                 i++;
             }
-            CHECK(i < s.length()) << "Negative number \"" << s.substr(start_index) << "\" reached unexpected end of string." << endl;
+            CHECK(i < s.length()) << "Negative number \"" << s.substr(start_index) << "\" reached unexpected end of string." << std::endl;
         }
         for (; '0' <= s[i] && s[i] <= '9'; i++) {
             val = (val * 10) + int(s[i] - '0');
@@ -167,13 +165,13 @@ namespace sample {
         if (is_negative) {
             val *= -1;
         }
-        LOG(INFO) << endl;
-        LOG(INFO) << "\tval: " << val << ", char length: " << i - start_index << endl;
-        return new Token(start_index, i, val, s.substr(start_index, i - start_index));
+        LOG(INFO) << std::endl;
+        LOG(INFO) << "\tval: " << val << ", char length: " << i - start_index << std::endl;
+        return std::make_unique<Token>(start_index, i, val, s.substr(start_index, i - start_index));
     }
 
-    Token* operationToken(string& s, int start_index) {
-        LOG(INFO) << "\toperationToken \"" << s << "\", start_index: " << start_index << endl << "\toperation\'" << s[start_index] << "\'" << endl ;
+    std::shared_ptr<Token> operationToken(std::string& s, int start_index) {
+        LOG(INFO) << "\toperationToken \"" << s << "\", start_index: " << start_index << std::endl << "\toperation\'" << s[start_index] << "\'" << std::endl ;
 
         Token::TokenOperationType operation;
         switch(s[start_index]) {
@@ -191,14 +189,14 @@ namespace sample {
                 break;
             default:
                 operation = Token::TokenOperationType::na;
-                LOG(INFO) << "Error! Unknown operation \'" << s[start_index] << "\'" << endl;
+                LOG(INFO) << "Error! Unknown operation \'" << s[start_index] << "\'" << std::endl;
         }
-        return new Token(start_index, start_index + 1, operation, s.substr(start_index, 1));
+        return std::make_unique<Token>(start_index, start_index + 1, operation, s.substr(start_index, 1));
     }
 
-    void printTokens(list<Token*>& tokens) {
+    void printTokens(std::list< std::shared_ptr<Token> >& tokens) {
         LOG(INFO) << "Tokens: {";
-        for (Token* t : tokens) {
+        for (std::shared_ptr<Token> t : tokens) {
             if (t->type == Token::TokenType::number) {
                 LOG(INFO) << t->value;
                 continue;
@@ -220,25 +218,25 @@ namespace sample {
                     LOG(INFO) << " unknown token ";
             }
         }
-        LOG(INFO) << "}, size = " << tokens.size() << endl;
+        LOG(INFO) << "}, size = " << tokens.size() << std::endl;
         LOG(INFO) << "Priorities: {  ";
-        for (Token* t : tokens) {
+        for (std::shared_ptr<Token> t : tokens) {
             LOG(INFO) << t->priority << "  ";
         }
-        LOG(INFO) << "}" << endl;
+        LOG(INFO) << "}" << std::endl;
     }
 
 
-    int Solution::calculate(string s) {
-        LOG(INFO) << "calculate(\"" << s << "\")" <<  endl;
+    int Solution::calculate(std::string s) {
+        LOG(INFO) << "calculate(\"" << s << "\")" <<  std::endl;
 
 
 
-        // Tokenizer: Parse string into list of tokens
-        list<Token*> tokens;
+        // Tokenizer: Parse string into std::list of tokens
+        std::list< std::shared_ptr<Token> > tokens;
         for (long unsigned int i = 0; i < s.size();) {
             if (s[i] == ' ') {
-                LOG(INFO) << "skip \' \'" << endl;
+                LOG(INFO) << "skip \' \'" << std::endl;
                 i++;
                 continue;
             }
@@ -255,8 +253,8 @@ namespace sample {
                         (tokens.empty() || tokens.back()->str == "(" || tokens.back()->type == Token::TokenType::operation)
                     )
                 ) {
-                LOG(INFO) << "number" << endl;
-                Token* t = numberToken(s, i);
+                LOG(INFO) << "number" << std::endl;
+                std::shared_ptr<Token> t = numberToken(s, i);
                 i = t->end_index;
                 tokens.push_back(t);
                 continue;
@@ -268,8 +266,8 @@ namespace sample {
                 case '*':
                 case '/':
                     {
-                        LOG(INFO) << "operation" << endl;
-                        Token* t = operationToken(s, i);
+                        LOG(INFO) << "operation" << std::endl;
+                        std::shared_ptr<Token> t = operationToken(s, i);
                         i = t->end_index;
                         tokens.push_back(t);
                         continue;
@@ -278,7 +276,7 @@ namespace sample {
                 case ')':
                 default:
                     {
-                        LOG(INFO) << "unhandled \'" << s[i] << "\'" << endl;
+                        LOG(INFO) << "unhandled \'" << s[i] << "\'" << std::endl;
                         i++;
                         continue;
                     }
@@ -286,25 +284,25 @@ namespace sample {
 
         }
         if (tokens.empty()) {
-            LOG(INFO) << "No tokens found!" << endl;
+            LOG(INFO) << "No tokens found!" << std::endl;
             return INT_MIN;
         }
 
         // Set token neighbors, between tokens
-        list<Token*>::iterator prev = tokens.begin();
-        LOG(INFO) << endl << "Neighbors" << endl;
-        for (list<Token*>::iterator it = next(tokens.begin()); it != tokens.end(); it++) {
+        std::list<std::shared_ptr<Token>>::iterator prev = tokens.begin();
+        LOG(INFO) << std::endl << "Neighbors" << std::endl;
+        for (std::list<std::shared_ptr<Token>>::iterator it = next(tokens.begin()); it != tokens.end(); it++) {
             (*prev)->right_neighbor = *it;
             (*it)->left_neighbor = *prev;
             // int previous_start  = (*prev)->start_index;
             // int previous_length = (*prev)->end_index - previous_start;
             // int current_start   = (*it)->start_index;
             // int current_length  = (*it)->end_index - current_start;
-            LOG(INFO) << "\t\"" << (*prev)->str << "\" and \"" << (*it)->str << "\"" << endl;
+            LOG(INFO) << "\t\"" << (*prev)->str << "\" and \"" << (*it)->str << "\"" << std::endl;
             prev = it;
         }
 
-        LOG(INFO) << endl;
+        LOG(INFO) << std::endl;
         printTokens(tokens);
 
         
@@ -314,16 +312,16 @@ namespace sample {
         // then parse operation tokens from lowest priority to highest priority into operation
         // tree, with lowest priority (numbers) at the leaves. All leaf nodes should be numbers,
         // but all parent nodes should be operations. Build tree using bottom-up approach.
-        vector<Token*> prioritizer(tokens.begin(), tokens.end());
+        std::vector<std::shared_ptr<Token>> prioritizer(tokens.begin(), tokens.end());
         sort(prioritizer.begin(), prioritizer.end(),
-                [](Token* x, Token* y){
+                [](std::shared_ptr<Token> x, std::shared_ptr<Token> y){
                     return x->priority < y->priority;
                 }
             );
 
-        LOG(INFO) << "Prioritized tokens:" << endl;
-        for (Token* token : prioritizer) {
-            LOG(INFO) << token->str << endl;
+        LOG(INFO) << "Prioritized tokens:" << std::endl;
+        for (std::shared_ptr<Token> token : prioritizer) {
+            LOG(INFO) << token->str << std::endl;
         }
 
         // Skip over numbers (priority 0)
@@ -333,18 +331,18 @@ namespace sample {
                 break;
             }
         }
-        LOG(INFO) << i << " numbers found" << endl;
+        LOG(INFO) << i << " numbers found" << std::endl;
 
         // Build expression tree. Set operation Token inputs and
         // parents. Parse operation low priority tokens (*/) then high priority
         // tokens (+-) left to right.
         for (; i < prioritizer.size(); i++) {
-            Token* token = prioritizer[i];
+            std::shared_ptr<Token> token = prioritizer[i];
 
-            Token* right_parameter;
+            std::shared_ptr<Token> right_parameter;
             // Add right neighbor (or ancestor without parent) to input
             if (token->right_neighbor == nullptr) {
-                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have right neighbor token." << endl;
+                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have right neighbor token." << std::endl;
             }
             right_parameter = token->right_neighbor;
             while(right_parameter->parent != nullptr) {
@@ -353,10 +351,10 @@ namespace sample {
             right_parameter->parent = token;
             token->input.push_back(right_parameter);
             
-            Token* left_parameter;
+            std::shared_ptr<Token> left_parameter;
             // Add left neighbor (or ancestor without parent) to input
             if (token->left_neighbor == nullptr) {
-                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have left neighbor token." << endl;
+                LOG(INFO) << "Error: Token \"" << token->str << "\" does not have left neighbor token." << std::endl;
             }
             left_parameter = token->left_neighbor;
             while(left_parameter->parent != nullptr) {
@@ -367,19 +365,16 @@ namespace sample {
         }
 
         
-        Token* root = prioritizer.back();
+        std::shared_ptr<Token> root = prioritizer.back();
         while (root->parent != nullptr) {
-            LOG(INFO) << "Moving root from \"" << root->str << "\" to \"" << root->parent->str << "\"" <<  endl;
+            LOG(INFO) << "Moving root from \"" << root->str << "\" to \"" << root->parent->str << "\"" <<  std::endl;
             root = root->parent;
         }
 
         // Recursive post-order traversal of expression tree to evaluate
-        LOG(INFO) << endl << "root->evaluate: (root == " << root->str << "):" << endl;
+        LOG(INFO) << std::endl << "root->evaluate: (root == " << root->str << "):" << std::endl;
         int result = root->evaluate();
 
-        for (Token* token : tokens) {
-            delete token;
-        }
         return result;
     }
 

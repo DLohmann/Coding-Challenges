@@ -43,5 +43,5 @@
 
 ## How to run:
 ```bash
-bazel test --test_output=all Q_224_Basic_Calculator:all
+bazel test --test_output=all Leetcode/Q_224_Basic_Calculator:all
 ```
