@@ -1,14 +1,16 @@
 # Stuff to ignore in repository
 
-# Confidential programming interviews & assessments
+# Confidential programming interviews & assessments. Must keep confidential.
+# Signed Non-Disclosure Agreement
+# * Applied Intuition
+# * Microsoft
 Apple/*
+Amazon/*
 Meta/*
 Moebius_Solutions/*
 ESRI/*
-
-# Signed Non-Disclosure Agreement for Applied Intuition. Must keep confidential.
+Microsoft/*
 Applied_Intuition/*
-
 TikTok/*
 Zoox/*
 
