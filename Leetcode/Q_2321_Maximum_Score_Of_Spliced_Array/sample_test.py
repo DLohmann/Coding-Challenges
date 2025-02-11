@@ -1,5 +1,5 @@
 import unittest
-import sample
+from Leetcode.Q_2321_Maximum_Score_Of_Spliced_Array import sample
 
 class TestMaximumsSplicedArray(unittest.TestCase):
     '''Unit test for spliced array solution.'''

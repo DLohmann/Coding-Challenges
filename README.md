@@ -16,3 +16,15 @@ Done:
 
 Helpful template:
 https://github.com/ourarash/cpp-template
+
+
+### Bazel
+Build repo:
+```bash
+bazel build //...
+```
+
+Test repo:
+```bash
+bazel test //...
+```
