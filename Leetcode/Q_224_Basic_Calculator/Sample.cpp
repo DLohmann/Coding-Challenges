@@ -50,7 +50,7 @@ namespace sample {
         std::shared_ptr<Token> parent = nullptr;
 
         // If an operation, set this to the input parameters
-        std::vector<std::shared_ptr<Token>> input;
+        std::vector< std::shared_ptr<Token> > input;
 
         // Adjacent tokens in the original expression.
         std::shared_ptr<Token> left_neighbor = nullptr;
@@ -289,9 +289,9 @@ namespace sample {
         }
 
         // Set token neighbors, between tokens
-        std::list<std::shared_ptr<Token>>::iterator prev = tokens.begin();
+        std::list< std::shared_ptr<Token> >::iterator prev = tokens.begin();
         LOG(INFO) << std::endl << "Neighbors" << std::endl;
-        for (std::list<std::shared_ptr<Token>>::iterator it = next(tokens.begin()); it != tokens.end(); it++) {
+        for (std::list< std::shared_ptr<Token> >::iterator it = next(tokens.begin()); it != tokens.end(); it++) {
             (*prev)->right_neighbor = *it;
             (*it)->left_neighbor = *prev;
             // int previous_start  = (*prev)->start_index;
@@ -312,7 +312,7 @@ namespace sample {
         // then parse operation tokens from lowest priority to highest priority into operation
         // tree, with lowest priority (numbers) at the leaves. All leaf nodes should be numbers,
         // but all parent nodes should be operations. Build tree using bottom-up approach.
-        std::vector<std::shared_ptr<Token>> prioritizer(tokens.begin(), tokens.end());
+        std::vector< std::shared_ptr<Token> > prioritizer(tokens.begin(), tokens.end());
         sort(prioritizer.begin(), prioritizer.end(),
                 [](std::shared_ptr<Token> x, std::shared_ptr<Token> y){
                     return x->priority < y->priority;
